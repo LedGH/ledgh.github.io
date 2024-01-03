@@ -1,0 +1,287 @@
+/* box around the slider */
+.switch {
+  position: fixed;
+  top: 40px;
+  left: 30px;
+  z-index: 1000;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: black;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+/* Slider states */
+input:checked + .slider {
+  background-color: #fc8f32;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #ece81a;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+/* Dark mode */
+body.dark-mode {
+  background-color: #1d1d1b;
+  color: white;
+}
+
+body.dark-mode nav,
+body.dark-mode header,
+body.dark-mode footer {
+  background-color: black;
+}
+
+body.dark-mode nav a {
+  color: #f0f0f0;
+}
+
+body.dark-mode nav a:hover {
+  color: #ece81a;
+}
+
+body.dark-mode .top_text {
+  color: #f0f0f0;
+}
+
+/* Default/light mode */
+body {
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+main {
+  padding: 20px;
+  padding-bottom: 60px;
+}
+
+#name {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  text-align: center;
+}
+
+#name h2 {
+  font-size: 70px;
+}
+
+#name h6 {
+  font-size: 20px;
+  margin-top: 10px;
+}
+
+section {
+  background-color: transparent;
+  padding: 10px;
+  margin-bottom: 20px;
+}
+
+/* Navbar */
+nav {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background-color: black;
+}
+
+nav ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+nav li {
+  padding: 10px;
+}
+
+nav a {
+  text-decoration: none;
+  color: #ffffff;
+  font-size: 18px;
+}
+
+nav a:hover {
+  color: #ece81a;
+}
+
+footer {
+  text-align: center;
+  padding: 10px;
+  background-color: #1d1d1b;
+}
+
+/* Media */
+.colmedia {
+  max-width: 640px; 
+  width: 100%;
+  border: 5px solid #ce2029;
+  transition: border-color 0.3s;
+  box-sizing: border-box; /* Ensures padding and border are included in width and height */
+}
+
+.colmedia:hover {
+  border-color: #000000;
+}
+
+.colmedia img {
+  width: 100%; /* Full width of the column */
+  height: auto; /* Maintain aspect ratio */
+  object-fit: cover; /* Fuck if I know */
+}
+
+
+.top_text {
+  font-size: 60px;
+  text-align: center;
+  margin-top: 50px;
+  margin-bottom: 50px;
+  color: #000000;
+  font-weight: bolder;
+  text-decoration: underline;
+  text-decoration-color: #fe5000;
+  text-underline-offset: 20px;
+  border-radius: 25px;
+}
+
+/* Column and the submit button*/
+.col-sm-4 {
+  text-align: center;
+  padding-bottom: 40px;
+}
+
+.button {
+  font-size: 22px;
+  background-color: #ece81a;
+  border: none;
+  border-radius: 1px;
+  color: black;
+  margin-top: 15px  ;
+  padding: 15px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+}
+
+.button:hover {
+  background-color: #fc8f32;
+}
+
+.button:click {
+  background-color: #ce2029;
+}
+
+.iframe-container {
+  position: relative;
+  width: 100%;
+  height: 0; /* padding maintains aspect ratio */
+  padding-bottom: 56.25%; /* 16:9 */
+  margin-bottom: 30px;
+  box-sizing: border-box;
+}
+
+.iframe-container iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 5px solid #ce2029; 
+  transition: border-color 0.3s;
+  box-sizing: border-box; /* Includes padding and border in the iframe's dimensions */
+}
+
+.iframe-container iframe:hover {
+  border-color: #000000;
+}
+
+.h3space {
+  margin-top: 50px;;
+}
+
+.caption {
+  margin-top: 50px;
+}
+
+/* @keyframes colorChange {
+  0%   { color: #ce2029; }
+  25%  { color: #fe5000; }
+  50%  { color: #fc8f32; }
+  75%  { color: #ece81a; }
+  100% { color: #ce2029; }
+}
+
+#animated {
+  animation-name: colorChange;
+  animation-duration: .8s;
+  animation-iteration-count: infinite;
+}
+ */
+
+.eldib
+ {
+  color: #ce2029;
+  text-decoration: none;
+ }
+
+.bigimg
+{
+  border: 5px solid #000000;
+  transition: border-color 0.3s;
+}
+
+.bigimg:hover
+{
+  border-color: #fc8f32;
+}
