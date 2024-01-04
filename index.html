@@ -686,17 +686,26 @@ there is a hell, and you're looking at it-->
             });
           });
         </script> -->
-        <script>
-        document.addEventListener('DOMContentLoaded', (event) => {
-        const darkModeToggle = document.getElementById('dark-mode-toggle');
+       <!-- Scripts for dark mode and other functionalities -->
+<script>
+  // Script for dark mode toggle functionality
+  document.addEventListener('DOMContentLoaded', (event) => {
+    const darkModeToggle = document.getElementById('dark-mode-toggle');
     
-    // Load dark mode from localStorage - this is how I can keep the button state saved between sessions (no more flashbangs)
+    // Load dark mode from localStorage
     const darkModePreference = localStorage.getItem('darkMode');
+    
+    // Set the initial state of the dark mode based on localStorage
     if (darkModePreference === 'enabled') {
       document.body.classList.add('dark-mode');
       darkModeToggle.checked = true;
+    } else {
+      // If there's no preference set, or it's explicitly disabled
+      document.body.classList.remove('dark-mode');
+      darkModeToggle.checked = false;
     }
 
+    // Attach a change event listener to the toggle
     darkModeToggle.addEventListener('change', function() {
       if (this.checked) {
         document.body.classList.add('dark-mode');
@@ -707,7 +716,26 @@ there is a hell, and you're looking at it-->
       }
     });
   });
-        </script>
+
+  // Script for adjusting iframe sizes (if still necessary)
+  // window.addEventListener('load', function() {
+  //   adjustIframeSize();
+  //   window.addEventListener('resize', adjustIframeSize);
+  // });
+
+  // function adjustIframeSize() {
+  //   var colmedia = document.querySelector('.colmedia');
+  //   var iframe = document.querySelector('.embed-responsive-custom iframe');
+
+  //   if(iframe && colmedia) {
+  //     var colmediaHeight = colmedia.clientHeight;
+  //     var borderAdjustment = 10;
+  //     iframe.style.height = (colmediaHeight + borderAdjustment) + 'px';
+  //     iframe.style.width = (colmedia.clientWidth + borderAdjustment) + 'px';
+  //   }
+  // }
+</script>
+
 <!-- <script>
   window.addEventListener('load', function() {
     adjustIframeAndCaption();
@@ -740,25 +768,6 @@ there is a hell, and you're looking at it-->
   }
 </script> 
 there is a hell, and you're looking at it-->
-<script>
-  window.addEventListener('load', function() {
-    adjustIframeSize();
-    window.addEventListener('resize', adjustIframeSize);
-  });
-
-  function adjustIframeSize() {
-    var colmedia = document.querySelector('.colmedia');
-    var iframe = document.querySelector('.embed-responsive-custom iframe');
-
-    if(iframe && colmedia) {
-      var colmediaHeight = colmedia.clientHeight;
-      var borderAdjustment = 10;
-      iframe.style.height = (colmediaHeight + borderAdjustment) + 'px';
-      iframe.style.width = (colmedia.clientWidth + borderAdjustment) + 'px';
-    }
-  }
-</script>
-
 
 
 <!-- The things I do for love... -->
