@@ -183,7 +183,9 @@
 
 
             <div class="container">
+              <div id="flashEffect">
               <img class="bigimg" src="portfolio/photography/Artboard 5.png" style="width: 100%;">
+            </div>
               <br>
               <br>
             <div class="container">
@@ -332,7 +334,19 @@
       }
     });
   });
-        </script>
+        
+</script>
+<script>
+var flashElement = document.getElementById('flashEffect');
+
+  flashElement.addEventListener('mouseover', function() {
+    this.classList.add('flash');
+});
+
+  flashElement.addEventListener('mouseleave', function() {
+   this.classList.remove('flash');
+});
+</script>
 <!-- <script>
   window.addEventListener('load', function() {
     adjustIframeAndCaption();

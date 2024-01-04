@@ -330,3 +330,15 @@ footer {
     width: 100%;
     height: 100%;
 }
+
+#flashEffect {
+  background-color: black;
+  color: white;
+  padding: 20px;
+  text-align: center;
+  transition: background-color 0.1s;
+}
+
+#flashEffect.flash {
+  background-color: lightgray;
+}
