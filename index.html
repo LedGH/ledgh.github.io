@@ -671,6 +671,7 @@ there is a hell, and you're looking at it-->
         </nav>
 
 
+
         <!-- Thank you StackOverflow gods for the help. At least JS is close enough to Java. Don't touch this either. It works. it's fine. Leave it alone. -->
         <!-- <script>
           document.addEventListener('DOMContentLoaded', (event) => {
@@ -739,11 +740,27 @@ there is a hell, and you're looking at it-->
   }
 </script> 
 there is a hell, and you're looking at it-->
+<script>
+  window.addEventListener('load', function() {
+    adjustIframeSize();
+    window.addEventListener('resize', adjustIframeSize);
+  });
 
+  function adjustIframeSize() {
+    var colmedia = document.querySelector('.colmedia');
+    var iframe = document.querySelector('.embed-responsive-custom iframe');
 
+    if(iframe && colmedia) {
+      var colmediaHeight = colmedia.clientHeight;
+      var borderAdjustment = 10;
+      iframe.style.height = (colmediaHeight + borderAdjustment) + 'px';
+      iframe.style.width = (colmedia.clientWidth + borderAdjustment) + 'px';
+    }
+  }
+</script>
 
 
 
 <!-- The things I do for love... -->
-    </body>
+            </body>
     </html>
