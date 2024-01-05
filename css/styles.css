@@ -307,12 +307,6 @@ footer {
 .bigimg
 {
   border: 5px solid #000000;
-  transition: border-color 0.3s;
-}
-
-.bigimg:hover
-{
-  border-color: #fc8f32;
 }
 
 .iframe-container {
