@@ -88,6 +88,11 @@ body.dark-mode .top_text {
   color: #f0f0f0;
 }
 
+body.dark-mode .colmedia:hover {
+  /* border-color: #ce2029; */
+  box-shadow: 0 0 10px 0 rgba(255, 255, 255, 0.75); 
+}
+
 /* Default/light mode */
 body {
   font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
@@ -166,7 +171,7 @@ footer {
   display: block; 
   width: 100%;
   border: 5px solid #000000;
-  transition: border-color 0.3s;
+  transition: box-shadow 0.3s;
   box-sizing: border-box; /* Ensures padding and border are included in width and height */
   height: auto;
   margin-bottom: -5px; /* Adjust if there's a gap */
@@ -174,7 +179,6 @@ footer {
 
 .portfolio-item {
   position: relative;
-  margin: 0; /* Remove default margins */
 }
 
 .caption {
@@ -193,14 +197,10 @@ footer {
   opacity: 1; /* Show caption on hover */
 }
 
-/* Remove spacing between columns */
-.row > [class*='col-'] {
-  padding: 0; /* Remove padding between columns */
-}
-
-
 .colmedia:hover {
-  border-color: #ce2029;
+  /* border-color: #ce2029; */
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.75);
+  
 }
 
 .colmedia img {
@@ -250,7 +250,7 @@ footer {
 .button:click {
   background-color: #ce2029;
 }
-
+ 
 .iframe-container {
   position: relative;
   width: 100%;
@@ -269,7 +269,7 @@ footer {
   border: 5px solid #ce2029; 
   transition: border-color 0.3s;
   box-sizing: border-box; /* Includes padding and border in the iframe's dimensions */
-}
+} 
 
 .iframe-container iframe:hover {
   border-color: #000000;
@@ -280,7 +280,10 @@ footer {
 }
 
 .caption {
-  margin-top: 50px;
+  margin-top: 60%;
+  margin-bottom: 8.8%;
+  margin-left: 3.5%;
+  margin-right: 3.1%;
 }
 
 /* @keyframes colorChange {
@@ -335,4 +338,8 @@ footer {
 
 #flashEffect.flash {
   background-color: #808080;
+}
+
+.caption.disable-pointer-events {
+  pointer-events: none;
 }
