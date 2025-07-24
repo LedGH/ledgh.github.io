@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Luke El Dib - Portfolio</title>
+  <style>
+    body {
+      background-color: #000;
+      color: #33ff33;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 18pt;
+      padding: 15px;
+      white-space: pre-wrap;
+    }
+    a {
+      color: #33bbff;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    .input-wrapper {
+      display: inline-flex;
+      align-items: flex-end;
+    }
+    .cursor {
+      width: 10px;
+      height: 2px;
+      background-color: #33ff33;
+      animation: blink 1s steps(1) infinite;
+      margin-left: 2px;
+    }
+    .ascii-wrapper {
+      display: inline-block;
+      animation: asciiMarquee 3s ease-out forwards;
+      white-space: nowrap;
+    }
+    @keyframes asciiShift {
+      0%   { filter: hue-rotate(0deg); }
+      100% { filter: hue-rotate(360deg); }
+    }
+    .ascii-art {
+      animation: asciiShift 30s linear infinite;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 190px;
+      margin-bottom: 2em;
+      flex-wrap: wrap;
+    }
+    @keyframes blink {
+      50% { background-color: transparent; }
+    }
+    .section {
+      margin-top: 2em;
+    }
+    .marquee {
+      width: 100%;
+      overflow: hidden;
+      white-space: nowrap;
+      box-sizing: border-box;
+      animation: marquee 18s linear infinite;
+    }
+    @keyframes marquee {
+      0%   { text-indent: 100% }
+      100% { text-indent: -100% }
+    }
+    .ascii-art {
+      text-align: center;
+    }
+    #terminal-input {
+      color: #33ff33;
+      background: none;
+      border: none;
+      font-family: inherit;
+      font-size: inherit;
+      outline: none;
+      display: inline-block;
+      min-width: 1ch;
+      white-space: pre;
+      caret-color: transparent;
+    }
+    #response {
+      margin-top: 1em;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: repeating-linear-gradient(
+        to bottom,
+        rgba(255, 255, 255, 0.05) 0px,
+        rgba(255, 255, 255, 0.05) 1px,
+        transparent 2px,
+        transparent 4px
+      );
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+
+  </style>
+</head>
+<body>
+  <div class="marquee">(c) Luke El Dib. All rights reserved. I don't know anything about copywrite law.  Coded this all myself btw. 2025</div>
+<div class="ascii-art">
+  <div class="ascii-wrapper">
+<pre>
+<span style="color:#9933ff">                  :::       :::    ::: :::    ::: :::::::::: </span>
+<span style="color:#aa33ee">                 :+:       :+:    :+: :+:   :+:  :+:         </span>
+<span style="color:#bb33dd">                +:+       +:+    +:+ +:+  +:+   +:+          </span>
+<span style="color:#cc33cc">               +#+       +#+    +:+ +#++:++    +#++:++#      </span>
+<span style="color:#dd33bb">              +#+       +#+    +#+ +#+  +#+   +#+            </span>
+<span style="color:#ee33aa">             #+#       #+#    #+# #+#   #+#  #+#             </span>
+<span style="color:#ff3399">            ########## ########  ###    ### ##########       </span>
+</pre>
+<pre>
+<span style="color:#ff3388">      :::::::::: :::          ::::::::: ::::::::::: :::::::::</span>
+<span style="color:#ff3377">     :+:        :+:          :+:    :+:    :+:     :+:    :+:</span>
+<span style="color:#ff3366">    +:+        +:+          +:+    +:+    +:+     +:+    +:+ </span>
+<span style="color:#ff3355">   +#++:++#   +#+          +#+    +:+    +#+     +#++:++#+   </span>
+<span style="color:#ff3344">  +#+        +#+          +#+    +#+    +#+     +#+    +#+   </span>
+<span style="color:#ff3333"> #+#        #+#          #+#    #+#    #+#     #+#    #+#    </span>
+<span style="color:#ee4422">########## ##########   ######### ########### #########      </span>
+</pre>
+</div>
+<div class="neofetch" style="text-align: left;">
+<pre>
+<span style="color:#33ff33">guest@lukeeldib.dev</span>
+-------------------
+
+<span style="color:#33bbff">OS:</span> PortfoliOS v2.2
+<span style="color:#33bbff">Host:</span> <span id="host">Detecting...</span>
+<span style="color:#33bbff">Kernel:</span> 6.9.42-dib
+<span style="color:#33bbff">Uptime:</span> ∞
+<span style="color:#33bbff">Shell:</span> /bin/creativity
+<span style="color:#33bbff">Resolution:</span> <span id="resolution">Loading...</span>
+<span style="color:#33bbff">DE:</span> imagination
+<span style="color:#33bbff">Theme:</span> #33ff33 on black
+<span style="color:#33bbff">Font:</span> Courier New 20pt
+<span style="color:#33bbff">Status:</span> Building something cool...
+</pre>
+</div>
+</div>
+<P style="margin: 0.5em 0 0 0"></P> Type "help" for a full list of commands.</P>
+
+
+<div id="output"></div>
+
+<div class="section" style="margin: 0.5em 0 0 0">
+> <span style="color:#33ff33">guest@lukeeldib.dev: </span>
+<div class="input-wrapper">
+  <div id="terminal-input" contenteditable="true" spellcheck="false" autofocus onkeydown="handleCommand(event)"></div>
+  <div class="cursor"></div>
+</div>
+</div>
+
+<script>
+const commandOutput = {
+  whoami: `Luke El Dib — designer, engineer, developer. Trilingual in English, Arabic, and French.\nLooking to gain meaningful work experience while completing a Communication Design degree.`,
+  work: `Biel Photo Essay — <a href="https://drive.google.com/file/d/14hn0GTDkk2Uk5BAbvqQcoM75XUzuVBFu" target="_blank">View</a><br>
+WWF Billboard (1) — <a href="https://docs.google.com/presentation/d/19_aIOAh1GclhFvJyvExtEZK3YcbxKsBn" target="_blank">View</a><br>
+WWF Billboard (2) — <a href="https://docs.google.com/presentation/d/19_aIOAh1GclhFvJyvExtEZK3YcbxKsBn" target="_blank">View</a><br>
+Daft Punk Cover — <a href="https://docs.google.com/presentation/d/14gSRhUhZukIYc09eZKIAvVAPLt3We_jP" target="_blank">View</a><br>
+Process Book — <a href="https://drive.google.com/open?id=14jtGJj-15FDFDYqRRCYPMWNFJnRlUCCu" target="_blank">View</a><br>
+Kodak Subway Takeover — <a href="https://drive.google.com/open?id=19_fbaH1PyPKjrS8Ira8P7b4HnfVaBZzk" target="_blank">View</a>`,
+  contact: `Instagram — <a href="https://www.instagram.com/ledbeirut/" target="_blank">@ledbeirut</a><br>
+YouTube — <a href="https://www.youtube.com/@ledbeirut/videos" target="_blank">@ledbeirut</a><br>
+Email — <a href="mailto:luke.eldib@gmail.com">luke.eldib@gmail.com</a>`
+};
+
+document.addEventListener('click', () => document.getElementById('terminal-input').focus());
+
+
+function handleCommand(e) {
+  function keepCursorAtEnd(el) {
+  const range = document.createRange();
+  const sel = window.getSelection();
+  range.selectNodeContents(el);
+  range.collapse(false); // move to end
+  sel.removeAllRanges();
+  sel.addRange(range);
+}
+
+const terminalInput = document.getElementById('terminal-input');
+
+terminalInput.addEventListener('keydown', () => {
+  // allow typing but keep cursor at end
+  requestAnimationFrame(() => keepCursorAtEnd(terminalInput));
+});
+
+terminalInput.addEventListener('mousedown', (e) => {
+  e.preventDefault(); // prevent placing cursor via mouse
+  terminalInput.focus();
+  keepCursorAtEnd(terminalInput);
+});
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    const input = e.target;
+    const cmd = input.textContent.trim().toLowerCase();
+    const output = document.getElementById('output');
+    const container = document.createElement('div');
+    container.innerHTML = `<pre>> ${cmd}</pre>`;
+
+    const content = document.createElement('div');
+    if (commandOutput[cmd]) {
+      content.innerHTML = commandOutput[cmd];
+    } else if (cmd === 'exit') {
+      content.textContent = 'Closing window...';
+      setTimeout(close_window, 1000);
+    } else if (cmd === 'clear' || cmd === 'clr') {
+      location.reload();;
+    return;
+  } else if (cmd === 'help') {
+    content.textContent = `<pre>
+Available commands:
+
+  whoami     Displays user information and background
+  work       Shows a selection of projects and links
+  contact    Lists contact details and social profiles
+  clear      Clears the screen (reloads the terminal)
+  exit       Closes the window (may not work on all browsers)
+  help       Displays this help message
+
+Type a command and press ENTER to execute.
+</pre>`
+} else {
+  content.textContent = 'Command not recognized.';
+}
+
+
+    container.appendChild(content);
+    output.appendChild(container);
+    input.textContent = '';
+    window.scrollTo(0, document.body.scrollHeight);
+  }
+}
+</script>
+
+<script>
+function updateResolution() {
+  const res = `${window.innerWidth}x${window.innerHeight}`;
+  document.getElementById('resolution').textContent = res;
+}
+window.addEventListener('resize', updateResolution);
+window.addEventListener('load', updateResolution);
+
+function detectBrowser() {
+  const ua = navigator.userAgent;
+  if (ua.includes("Firefox/")) return "Firefox";
+  if (ua.includes("Edg/")) return "Microsoft Edge";
+  if (ua.includes("OPR/") || ua.includes("Opera")) return "Opera";
+  if (ua.includes("Chrome/") && !ua.includes("Edg/") && !ua.includes("OPR/")) return "Chrome";
+  if (ua.includes("Safari/") && !ua.includes("Chrome/")) return "Safari";
+  return "Unknown";
+}
+
+document.getElementById('host').textContent = detectBrowser();
+</script>
+
+</body>
+</html>
