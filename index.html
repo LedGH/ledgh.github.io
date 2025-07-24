@@ -443,7 +443,11 @@ there is a hell, and you're looking at it-->
         <br><span>For film/video.</span>
       </div>
     </div>
-    <button onclick="closePopup()">Enter Site</button>
+    <div style="margin-top: 1rem;">
+  <button onclick="closePopup()" style="margin-right: 10px;">Enter Site</button>
+  <button onclick="stopShowingPopup()">I get it, please stop</button>
+</div>
+
   </div>
 </div>
 
@@ -522,7 +526,23 @@ there is a hell, and you're looking at it-->
   function closePopup() {
     document.getElementById('overlay').style.display = 'none';
   }
+
+  function stopShowingPopup() {
+    const now = new Date();
+    localStorage.setItem('popupDismissedUntil', now.getTime() + 86400000); // 24 hours in ms
+    closePopup();
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const dismissedUntil = localStorage.getItem('popupDismissedUntil');
+    const now = new Date().getTime();
+
+    if (dismissedUntil && now < dismissedUntil) {
+      closePopup(); // don't show popup if still within 24h window
+    }
+  });
 </script>
+
 
     </body>
     </html>
