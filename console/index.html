@@ -102,6 +102,7 @@
 
 
   </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r152/three.min.js"></script>
 </head>
 <body>
   <div class="marquee">(c) Luke El Dib. All rights reserved. I don't know anything about copywrite law.  Coded this all myself btw. 2025</div>
@@ -156,6 +157,32 @@
   <div class="cursor"></div>
 </div>
 </div>
+  
+<script>
+function showTetrahedronLoader(targetId) {
+  const container = document.getElementById(targetId);
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
+  const renderer = new THREE.WebGLRenderer({ alpha: true });
+  renderer.setSize(container.clientWidth, container.clientHeight);
+  container.appendChild(renderer.domElement);
+
+  const geometry = new THREE.TetrahedronGeometry(1);
+  const material = new THREE.MeshBasicMaterial({ color: 0x33ff33, wireframe: true });
+  const tetrahedron = new THREE.Mesh(geometry, material);
+  scene.add(tetrahedron);
+
+  camera.position.z = 3;
+
+  function animate() {
+    requestAnimationFrame(animate);
+    tetrahedron.rotation.x += 0.01;
+    tetrahedron.rotation.y += 0.01;
+    renderer.render(scene, camera);
+  }
+  animate();
+}
+</script>
 
 <script>
 const commandOutput = {
@@ -243,6 +270,23 @@ function handleCommand(e) {
       location.reload();
       return;
 
+    } else if (cmd === 'tetra') {
+  content.innerHTML = 'Rendering wireframe tetrahedron...';
+  container.appendChild(content);
+  output.appendChild(container);
+
+  const renderZone = document.createElement('div');
+  renderZone.id = 'tetrahedron-container';
+  renderZone.style = 'width: 100%; height: 300px; background: black; margin-top: 10px;';
+  output.appendChild(renderZone);
+
+  showTetrahedronLoader('tetrahedron-container');
+  input.textContent = '';
+  window.scrollTo(0, document.body.scrollHeight);
+  return;
+}
+
+
     } else if (cmd === 'help') {
       content.innerHTML = `<pre>
 Available commands:
@@ -252,6 +296,7 @@ Available commands:
   contact    Lists contact details and social profiles  
   insta      Opens my Instagram  
   yt         Opens my YouTube channel  
+  tetra      Renders a 3D wireframe tetrahedron
   clear/clr  Clears the screen (reloads the terminal)  
   exit       Closes the window (may not work on all browsers)  
   help       Displays this help message  
