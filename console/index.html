@@ -348,6 +348,61 @@ if (isMobile) {
 }
 </style>
 
+<script>
+const bootMessages = [
+  "Booting LukeOS v0.9...",
+  "Initializing portfolio modules...",
+  "Loading visual interface... OK",
+  "Mounting /dev/design... OK",
+  "Establishing connection to ledbeirut... OK",
+  "Loading projects directory... OK",
+  "System ready.",
+  "Launching console..."
+];
+
+function shouldShowBoot() {
+  const lastShown = localStorage.getItem('boot-screen-last-shown');
+  if (!lastShown) return true;
+
+  const now = new Date();
+  const lastDate = new Date(parseInt(lastShown, 10));
+  return now.toDateString() !== lastDate.toDateString();
+}
+
+function markBootShown() {
+  localStorage.setItem('boot-screen-last-shown', Date.now().toString());
+}
+
+function showBootSequence() {
+  const bootScreen = document.getElementById('boot-screen');
+  const bootLines = document.getElementById('boot-lines');
+  let bootIndex = 0;
+
+  function showNextBootLine() {
+    if (bootIndex < bootMessages.length) {
+      bootLines.textContent += bootMessages[bootIndex] + "\n";
+      bootIndex++;
+      setTimeout(showNextBootLine, 500);
+    } else {
+      setTimeout(() => {
+        bootScreen.style.display = 'none';
+      }, 800);
+    }
+  }
+
+  showNextBootLine();
+  markBootShown();
+}
+
+window.addEventListener('load', () => {
+  if (shouldShowBoot()) {
+    showBootSequence();
+  } else {
+    document.getElementById('boot-screen').style.display = 'none';
+  }
+});
+</script>
+
 
 <script data-goatcounter="https://ledop.goatcounter.com/count"
         async src="//gc.zgo.at/count.js"></script>
