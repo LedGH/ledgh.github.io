@@ -186,18 +186,18 @@ function showTetrahedronLoader(targetId) {
 
 <script>
 const commandOutput = {
-  whoami: `Luke El Dib — designer, engineer, developer. Trilingual in English, Arabic, and French.\nLooking to gain meaningful work experience while completing a Communication Design degree.`,
+  whoami: Luke El Dib — designer, engineer, developer. Trilingual in English, Arabic, and French.\nLooking to gain meaningful work experience while completing a Communication Design degree.,
 
-  work: `Biel Photo Essay — <a href="https://drive.google.com/file/d/14hn0GTDkk2Uk5BAbvqQcoM75XUzuVBFu" target="_blank">View</a><br>
+  work: Biel Photo Essay — <a href="https://drive.google.com/file/d/14hn0GTDkk2Uk5BAbvqQcoM75XUzuVBFu" target="_blank">View</a><br>
 WWF Billboard (1) — <a href="https://docs.google.com/presentation/d/19_aIOAh1GclhFvJyvExtEZK3YcbxKsBn" target="_blank">View</a><br>
 WWF Billboard (2) — <a href="https://docs.google.com/presentation/d/19_aIOAh1GclhFvJyvExtEZK3YcbxKsBn" target="_blank">View</a><br>
 Daft Punk Cover — <a href="https://docs.google.com/presentation/d/14gSRhUhZukIYc09eZKIAvVAPLt3We_jP" target="_blank">View</a><br>
 Process Book — <a href="https://drive.google.com/open?id=14jtGJj-15FDFDYqRRCYPMWNFJnRlUCCu" target="_blank">View</a><br>
-Kodak Subway Takeover — <a href="https://drive.google.com/open?id=19_fbaH1PyPKjrS8Ira8P7b4HnfVaBZzk" target="_blank">View</a>`,
+Kodak Subway Takeover — <a href="https://drive.google.com/open?id=19_fbaH1PyPKjrS8Ira8P7b4HnfVaBZzk" target="_blank">View</a>,
 
-  contact: `Instagram — <a href="https://www.instagram.com/ledbeirut/" target="_blank">@ledbeirut</a><br>
+  contact: Instagram — <a href="https://www.instagram.com/ledbeirut/" target="_blank">@ledbeirut</a><br>
 YouTube — <a href="https://www.youtube.com/@ledbeirut/videos" target="_blank">@ledbeirut</a><br>
-Email — <a href="mailto:luke.eldib@gmail.com">luke.eldib@gmail.com</a>`
+Email — <a href="mailto:luke.eldib@gmail.com">luke.eldib@gmail.com</a>
 };
 
 function keepCursorAtEnd(el) {
@@ -219,9 +219,8 @@ window.addEventListener('DOMContentLoaded', () => {
   const terminalInput = document.getElementById('terminal-input');
   const output = document.getElementById('output');
 
-terminalInput.addEventListener('keydown', () => {
-  requestAnimationFrame(() => keepCursorAtEnd(terminalInput));
-});
+  terminalInput.addEventListener('keydown', (e) => {
+    requestAnimationFrame(() => keepCursorAtEnd(terminalInput));
     handleCommand(e, terminalInput, output);
   });
 
@@ -237,7 +236,7 @@ function handleCommand(e, input, output) {
     e.preventDefault();
     const cmd = input.textContent.trim().toLowerCase();
     const container = document.createElement('div');
-    container.innerHTML = `<pre>> ${cmd}</pre>`;
+    container.innerHTML = <pre>> ${cmd}</pre>;
     const content = document.createElement('div');
 
     if (commandOutput[cmd]) {
@@ -281,7 +280,7 @@ function handleCommand(e, input, output) {
 
       const renderZone = document.createElement('div');
       renderZone.id = 'tetrahedron-container';
-      renderZone.style = `
+      renderZone.style = 
         width: 300px;
         height: 300px;
         background: black;
@@ -290,7 +289,7 @@ function handleCommand(e, input, output) {
         display: flex;
         justify-content: center;
         align-items: center;
-      `;
+      ;
 
       output.appendChild(renderZone);
       showTetrahedronLoader('tetrahedron-container');
@@ -299,7 +298,7 @@ function handleCommand(e, input, output) {
       return;
 
     } else if (cmd === 'help') {
-      content.innerHTML = `<pre>
+      content.innerHTML = <pre>
 Available commands:
 
   whoami     Displays user information and background  
@@ -313,7 +312,7 @@ Available commands:
   help       Displays this help message  
 
 Type a command and press ENTER to execute.
-</pre>`;
+</pre>;
 
     } else {
       content.textContent = 'Command not recognized.';
@@ -330,7 +329,7 @@ Type a command and press ENTER to execute.
 
 <script>
 function updateResolution() {
-  const res = `${window.innerWidth}x${window.innerHeight}`;
+  const res = ${window.innerWidth}x${window.innerHeight};
   document.getElementById('resolution').textContent = res;
 }
 window.addEventListener('resize', updateResolution);
@@ -356,7 +355,7 @@ const isMobile = /Mobi|Android/i.test(navigator.userAgent);
 if (isMobile) {
   const overlay = document.createElement('div');
   overlay.id = 'mobile-warning';
-  overlay.innerHTML = `
+  overlay.innerHTML = 
     <div class="terminal-popup">
       <pre>
 +--------------------------------------------------------------+
@@ -371,7 +370,7 @@ if (isMobile) {
 +--------------------------------------------------------------+
       </pre>
     </div>
-  `;
+  ;
 
   document.body.appendChild(overlay);
 
