@@ -293,6 +293,62 @@ function detectBrowser() {
 document.getElementById('host').textContent = detectBrowser();
 </script>
 
+  <script>
+// Simple mobile detection
+const isMobile = /Mobi|Android/i.test(navigator.userAgent);
+
+if (isMobile) {
+  const overlay = document.createElement('div');
+  overlay.id = 'mobile-warning';
+  overlay.innerHTML = `
+    <div class="terminal-popup">
+      <pre>
++--------------------------------------------------------------+
+|  WARNING                                                    |
+|--------------------------------------------------------------|
+|  This terminal experience is not optimized for mobile.      |
+|  For the best experience, please visit the full portfolio:  |
+|                                                              |
+|  https://lukeeldib.dev                                      |
+|                                                              |
+|  [Tap anywhere to continue anyway]                          |
++--------------------------------------------------------------+
+      </pre>
+    </div>
+  `;
+
+  document.body.appendChild(overlay);
+
+  overlay.addEventListener('click', () => {
+    overlay.remove();
+  });
+}
+</script>
+
+<style>
+#mobile-warning {
+  position: fixed;
+  z-index: 9999;
+  background: black;
+  color: #00ff00;
+  font-family: monospace;
+  font-size: 14px;
+  top: 0; left: 0;
+  width: 100vw;
+  height: 100vh;
+  padding: 2em;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#mobile-warning .terminal-popup {
+  white-space: pre-wrap;
+}
+</style>
+
+
 <script data-goatcounter="https://ledop.goatcounter.com/count"
         async src="//gc.zgo.at/count.js"></script>
   
