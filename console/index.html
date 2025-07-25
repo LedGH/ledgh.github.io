@@ -219,8 +219,9 @@ window.addEventListener('DOMContentLoaded', () => {
   const terminalInput = document.getElementById('terminal-input');
   const output = document.getElementById('output');
 
-  terminalInput.addEventListener('keydown', (e) => {
-    requestAnimationFrame(() => keepCursorAtEnd(terminalInput));
+terminalInput.addEventListener('keydown', () => {
+  requestAnimationFrame(() => keepCursorAtEnd(terminalInput));
+});
     handleCommand(e, terminalInput, output);
   });
 
