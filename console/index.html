@@ -226,27 +226,51 @@ Type a command and press ENTER to execute.
     }
   });
 });
-  const terminalInput = document.getElementById('terminal-input');
 
-// Force focus on load
-window.addEventListener('load', () => {
-  terminalInput.focus();
-});
+const terminalInput = document.getElementById('terminal-input');
 
-// Re-focus if anything else is clicked
+// Always focus on input
+window.addEventListener('load', () => terminalInput.focus());
+
 document.addEventListener('click', (e) => {
-  if (e.target !== terminalInput && !terminalInput.contains(e.target)) {
+  if (!terminalInput.contains(e.target)) {
     e.preventDefault();
     terminalInput.focus();
   }
 });
 
-// Optional: prevent user from deselecting by tabbing out
 terminalInput.addEventListener('blur', () => {
   setTimeout(() => terminalInput.focus(), 0);
 });
 
+// Force caret to end
+function moveCaretToEnd(el) {
+  const range = document.createRange();
+  const sel = window.getSelection();
+  range.selectNodeContents(el);
+  range.collapse(false); // false = move to end
+  sel.removeAllRanges();
+  sel.addRange(range);
+}
+
+// Reposition caret on focus, click, or key
+['focus', 'click', 'keyup', 'mouseup'].forEach(evt => {
+  terminalInput.addEventListener(evt, () => {
+    moveCaretToEnd(terminalInput);
+  });
+});
+
+// Block arrow keys and Home/End
+terminalInput.addEventListener('keydown', (e) => {
+  if (
+    ['ArrowLeft', 'ArrowUp', 'ArrowRight', 'ArrowDown', 'Home', 'PageUp', 'PageDown'].includes(e.key)
+  ) {
+    e.preventDefault();
+  }
+});
 </script>
+
+
 
 
 
