@@ -102,9 +102,9 @@
 
 
   </style>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r152/three.min.js"></script>
 </head>
 <body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r152/three.min.js"></script>
   <div class="marquee">(c) Luke El Dib. All rights reserved. I don't know anything about copywrite law.  Coded this all myself btw. 2025</div>
 <div class="ascii-art">
   <div class="ascii-wrapper">
@@ -200,10 +200,6 @@ YouTube — <a href="https://www.youtube.com/@ledbeirut/videos" target="_blank">
 Email — <a href="mailto:luke.eldib@gmail.com">luke.eldib@gmail.com</a>`
 };
 
-document.addEventListener('click', () => {
-  document.getElementById('terminal-input').focus();
-});
-
 function keepCursorAtEnd(el) {
   const range = document.createRange();
   const sel = window.getSelection();
@@ -213,27 +209,34 @@ function keepCursorAtEnd(el) {
   sel.addRange(range);
 }
 
-const terminalInput = document.getElementById('terminal-input');
-
-terminalInput.addEventListener('keydown', () => {
-  requestAnimationFrame(() => keepCursorAtEnd(terminalInput));
-});
-
-terminalInput.addEventListener('mousedown', (e) => {
-  e.preventDefault();
+document.addEventListener('click', () => {
+  const terminalInput = document.getElementById('terminal-input');
   terminalInput.focus();
   keepCursorAtEnd(terminalInput);
 });
 
-function handleCommand(e) {
+window.addEventListener('DOMContentLoaded', () => {
+  const terminalInput = document.getElementById('terminal-input');
+  const output = document.getElementById('output');
+
+  terminalInput.addEventListener('keydown', (e) => {
+    requestAnimationFrame(() => keepCursorAtEnd(terminalInput));
+    handleCommand(e, terminalInput, output);
+  });
+
+  terminalInput.addEventListener('mousedown', (e) => {
+    e.preventDefault();
+    terminalInput.focus();
+    keepCursorAtEnd(terminalInput);
+  });
+});
+
+function handleCommand(e, input, output) {
   if (e.key === 'Enter') {
     e.preventDefault();
-    const input = e.target;
     const cmd = input.textContent.trim().toLowerCase();
-    const output = document.getElementById('output');
     const container = document.createElement('div');
     container.innerHTML = `<pre>> ${cmd}</pre>`;
-
     const content = document.createElement('div');
 
     if (commandOutput[cmd]) {
@@ -243,7 +246,7 @@ function handleCommand(e) {
       content.textContent = 'Opening YouTube...';
       container.appendChild(content);
       output.appendChild(container);
-      input.textContent = '';
+      input.innerHTML = '';
       window.scrollTo(0, document.body.scrollHeight);
       window.open('https://www.youtube.com/@ledbeirut/videos', '_blank');
       return;
@@ -252,7 +255,7 @@ function handleCommand(e) {
       content.textContent = 'Opening Instagram...';
       container.appendChild(content);
       output.appendChild(container);
-      input.textContent = '';
+      input.innerHTML = '';
       window.scrollTo(0, document.body.scrollHeight);
       window.open('https://www.instagram.com/ledbeirut/', '_blank');
       return;
@@ -261,9 +264,9 @@ function handleCommand(e) {
       content.textContent = 'Closing window...';
       container.appendChild(content);
       output.appendChild(container);
-      input.textContent = '';
+      input.innerHTML = '';
       window.scrollTo(0, document.body.scrollHeight);
-      setTimeout(close_window, 1000);
+      setTimeout(() => window.close(), 1000);
       return;
 
     } else if (cmd === 'clear' || cmd === 'clr') {
@@ -271,31 +274,28 @@ function handleCommand(e) {
       return;
 
     } else if (cmd === 'tetra') {
-  content.innerHTML = 'Rendering wireframe tetrahedron...';
-  container.appendChild(content);
-  output.appendChild(container);
+      content.innerHTML = 'Rendering wireframe tetrahedron...';
+      container.appendChild(content);
+      output.appendChild(container);
 
-  const renderZone = document.createElement('div');
-  renderZone.id = 'tetrahedron-container';
-  renderZone.style = `
-  width: 300px;
-  height: 300px;
-  background: black;
-  margin-top: 10px;
-  margin-bottom: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
+      const renderZone = document.createElement('div');
+      renderZone.id = 'tetrahedron-container';
+      renderZone.style = `
+        width: 300px;
+        height: 300px;
+        background: black;
+        margin-top: 10px;
+        margin-bottom: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      `;
 
-  output.appendChild(renderZone);
-
-  showTetrahedronLoader('tetrahedron-container');
-  input.textContent = '';
-  window.scrollTo(0, document.body.scrollHeight);
-  return;
-}
-
+      output.appendChild(renderZone);
+      showTetrahedronLoader('tetrahedron-container');
+      input.innerHTML = '';
+      window.scrollTo(0, document.body.scrollHeight);
+      return;
 
     } else if (cmd === 'help') {
       content.innerHTML = `<pre>
@@ -306,7 +306,7 @@ Available commands:
   contact    Lists contact details and social profiles  
   insta      Opens my Instagram  
   yt         Opens my YouTube channel  
-  tetra      Renders a 3D wireframe tetrahedron
+  tetra      Renders a 3D wireframe tetrahedron  
   clear/clr  Clears the screen (reloads the terminal)  
   exit       Closes the window (may not work on all browsers)  
   help       Displays this help message  
@@ -320,7 +320,7 @@ Type a command and press ENTER to execute.
 
     container.appendChild(content);
     output.appendChild(container);
-    input.textContent = '';
+    input.innerHTML = '';
     window.scrollTo(0, document.body.scrollHeight);
   }
 }
