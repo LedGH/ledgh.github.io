@@ -186,119 +186,45 @@ function showTetrahedronLoader(targetId) {
 
 <script>
 const commandOutput = {
-  whoami: Luke El Dib — designer, engineer, developer. Trilingual in English, Arabic, and French.\nLooking to gain meaningful work experience while completing a Communication Design degree.,
-
-  work: Biel Photo Essay — <a href="https://drive.google.com/file/d/14hn0GTDkk2Uk5BAbvqQcoM75XUzuVBFu" target="_blank">View</a><br>
+  whoami: `Luke El Dib — designer, engineer, developer. Trilingual in English, Arabic, and French.\nLooking to gain meaningful work experience while completing a Communication Design degree.`,
+  work: `Biel Photo Essay — <a href="https://drive.google.com/file/d/14hn0GTDkk2Uk5BAbvqQcoM75XUzuVBFu" target="_blank">View</a><br>
 WWF Billboard (1) — <a href="https://docs.google.com/presentation/d/19_aIOAh1GclhFvJyvExtEZK3YcbxKsBn" target="_blank">View</a><br>
 WWF Billboard (2) — <a href="https://docs.google.com/presentation/d/19_aIOAh1GclhFvJyvExtEZK3YcbxKsBn" target="_blank">View</a><br>
 Daft Punk Cover — <a href="https://docs.google.com/presentation/d/14gSRhUhZukIYc09eZKIAvVAPLt3We_jP" target="_blank">View</a><br>
 Process Book — <a href="https://drive.google.com/open?id=14jtGJj-15FDFDYqRRCYPMWNFJnRlUCCu" target="_blank">View</a><br>
-Kodak Subway Takeover — <a href="https://drive.google.com/open?id=19_fbaH1PyPKjrS8Ira8P7b4HnfVaBZzk" target="_blank">View</a>,
-
-  contact: Instagram — <a href="https://www.instagram.com/ledbeirut/" target="_blank">@ledbeirut</a><br>
+Kodak Subway Takeover — <a href="https://drive.google.com/open?id=19_fbaH1PyPKjrS8Ira8P7b4HnfVaBZzk" target="_blank">View</a>`,
+  contact: `Instagram — <a href="https://www.instagram.com/ledbeirut/" target="_blank">@ledbeirut</a><br>
 YouTube — <a href="https://www.youtube.com/@ledbeirut/videos" target="_blank">@ledbeirut</a><br>
-Email — <a href="mailto:luke.eldib@gmail.com">luke.eldib@gmail.com</a>
+Email — <a href="mailto:luke.eldib@gmail.com">luke.eldib@gmail.com</a>`
 };
 
-function keepCursorAtEnd(el) {
-  const range = document.createRange();
-  const sel = window.getSelection();
-  range.selectNodeContents(el);
-  range.collapse(false);
-  sel.removeAllRanges();
-  sel.addRange(range);
-}
-
-document.addEventListener('click', () => {
-  const terminalInput = document.getElementById('terminal-input');
-  terminalInput.focus();
-  keepCursorAtEnd(terminalInput);
-});
-
-window.addEventListener('DOMContentLoaded', () => {
-  const terminalInput = document.getElementById('terminal-input');
+function handleCommand(e) {
+  const input = document.getElementById('terminal-input');
   const output = document.getElementById('output');
 
-  terminalInput.addEventListener('keydown', (e) => {
-    requestAnimationFrame(() => keepCursorAtEnd(terminalInput));
-    handleCommand(e, terminalInput, output);
-  });
-
-  terminalInput.addEventListener('mousedown', (e) => {
-    e.preventDefault();
-    terminalInput.focus();
-    keepCursorAtEnd(terminalInput);
-  });
-});
-
-function handleCommand(e, input, output) {
   if (e.key === 'Enter') {
     e.preventDefault();
     const cmd = input.textContent.trim().toLowerCase();
     const container = document.createElement('div');
-    container.innerHTML = <pre>> ${cmd}</pre>;
+    container.innerHTML = `<pre>> ${cmd}</pre>`;
     const content = document.createElement('div');
 
     if (commandOutput[cmd]) {
       content.innerHTML = commandOutput[cmd];
-
     } else if (cmd === 'yt') {
       content.textContent = 'Opening YouTube...';
-      container.appendChild(content);
-      output.appendChild(container);
-      input.innerHTML = '';
-      window.scrollTo(0, document.body.scrollHeight);
       window.open('https://www.youtube.com/@ledbeirut/videos', '_blank');
-      return;
-
     } else if (cmd === 'insta') {
       content.textContent = 'Opening Instagram...';
-      container.appendChild(content);
-      output.appendChild(container);
-      input.innerHTML = '';
-      window.scrollTo(0, document.body.scrollHeight);
       window.open('https://www.instagram.com/ledbeirut/', '_blank');
-      return;
-
     } else if (cmd === 'exit') {
       content.textContent = 'Closing window...';
-      container.appendChild(content);
-      output.appendChild(container);
-      input.innerHTML = '';
-      window.scrollTo(0, document.body.scrollHeight);
       setTimeout(() => window.close(), 1000);
-      return;
-
     } else if (cmd === 'clear' || cmd === 'clr') {
       location.reload();
       return;
-
-    } else if (cmd === 'tetra') {
-      content.innerHTML = 'Rendering wireframe tetrahedron...';
-      container.appendChild(content);
-      output.appendChild(container);
-
-      const renderZone = document.createElement('div');
-      renderZone.id = 'tetrahedron-container';
-      renderZone.style = 
-        width: 300px;
-        height: 300px;
-        background: black;
-        margin-top: 10px;
-        margin-bottom: 20px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      ;
-
-      output.appendChild(renderZone);
-      showTetrahedronLoader('tetrahedron-container');
-      input.innerHTML = '';
-      window.scrollTo(0, document.body.scrollHeight);
-      return;
-
     } else if (cmd === 'help') {
-      content.innerHTML = <pre>
+      content.innerHTML = `<pre>
 Available commands:
 
   whoami     Displays user information and background  
@@ -306,14 +232,12 @@ Available commands:
   contact    Lists contact details and social profiles  
   insta      Opens my Instagram  
   yt         Opens my YouTube channel  
-  tetra      Renders a 3D wireframe tetrahedron  
   clear/clr  Clears the screen (reloads the terminal)  
   exit       Closes the window (may not work on all browsers)  
   help       Displays this help message  
 
 Type a command and press ENTER to execute.
-</pre>;
-
+</pre>`;
     } else {
       content.textContent = 'Command not recognized.';
     }
@@ -325,6 +249,7 @@ Type a command and press ENTER to execute.
   }
 }
 </script>
+
 
 
 <script>
