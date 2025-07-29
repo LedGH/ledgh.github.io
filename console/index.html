@@ -201,7 +201,7 @@ document.addEventListener('DOMContentLoaded', () => {
         window.open('https://www.instagram.com/ledbeirut/', '_blank');
       } else if (cmd === 'exit') {
         content.textContent = 'Closing window...';
-        setTimeout(() => window.close(), 1000);
+        setTimeout(() => self.close(), 1000);
       } else if (cmd === 'source' || cmd === 'src') {
         content.textContent = 'Opening Github...';
         window.open('https://github.com/LedGH/ledgh.github.io/', '_blank');
