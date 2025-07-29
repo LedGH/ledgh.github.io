@@ -195,12 +195,15 @@ document.addEventListener('DOMContentLoaded', () => {
       } else if (cmd === 'yt') {
         content.textContent = 'Opening YouTube...';
         window.open('https://www.youtube.com/@ledbeirut/videos', '_blank');
-      } else if (cmd === 'insta') {
+      } else if (cmd === 'insta' || cmd === 'ig') {
         content.textContent = 'Opening Instagram...';
         window.open('https://www.instagram.com/ledbeirut/', '_blank');
       } else if (cmd === 'exit') {
         content.textContent = 'Closing window...';
         setTimeout(() => window.close(), 1000);
+      } else if (cmd === 'source' || cmd === 'src') {
+        content.textContent = 'Opening Instagram...';
+        window.open('https://github.com/LedGH/ledgh.github.io/', '_blank');
       } else if (cmd === 'clear' || cmd === 'clr') {
         output.innerHTML = '';
         input.textContent = '';
@@ -209,14 +212,15 @@ document.addEventListener('DOMContentLoaded', () => {
         content.innerHTML = `<pre>
 Available commands:
 
-  whoami     Displays user information and background  
-  work       Shows a selection of projects and links  
-  contact    Lists contact details and social profiles  
-  insta      Opens my Instagram  
-  yt         Opens my YouTube channel  
-  clear/clr  Clears the screen  
-  exit       Closes the window (may not work on all browsers)  
-  help       Displays this help message  
+  whoami       Displays user information and background  
+  work         Shows a selection of projects and links  
+  contact      Lists contact details and social profiles  
+  insta/ig     Opens my Instagram  
+  yt           Opens my YouTube channel  
+  source/src   Shows the source code of this site on Github
+  clear/clr    Clears the screen  
+  exit         Closes the window (may not work on all browsers)  
+  help         Displays this help message  
 
 Type a command and press ENTER to execute.
 </pre>`;
