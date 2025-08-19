@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Auto Gallery Test</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Optional: EXIF/XMP reader (small, CDN). If you don't care about metadata, you can remove this line. -->
+  <script src="https://cdn.jsdelivr.net/npm/exifr/dist/lite.umd.js"></script>
+
+  <style>
+    :root { --gap: 16px; }
+    body {
+      margin: 0 auto;
+      padding: 24px;
+      max-width: 1100px;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.45;
+      color: #111;
+    }
+    h1 { margin: 0 0 8px; }
+    .note { color: #666; margin: 0 0 24px; }
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr; /* default: 1 column */
+  gap: var(--gap);
+}
+
+@media (min-width: 600px) {
+  .grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (min-width: 900px) {
+  .grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+    .card {
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      overflow: hidden;
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+    }
+    .thumb {
+      width: 100%;
+      aspect-ratio: 4/3;
+      object-fit: cover;
+      display: block;
+      background: #f3f3f3;
+    }
+    .meta {
+      padding: 12px 14px 14px;
+    }
+    .title {
+      font-weight: 600;
+      margin: 0 0 6px;
+      font-size: 16px;
+    }
+    .caption {
+      margin: 0;
+      color: #444;
+      font-size: 14px;
+    }
+    .badge {
+      display: inline-block;
+      font-size: 12px;
+      background: #eee;
+      color: #555;
+      padding: 2px 8px;
+      border-radius: 999px;
+      margin-top: 8px;
+    }
+    .error {
+      background: #fff3f3;
+      border: 1px solid #ffc9c9;
+      color: #991b1b;
+      padding: 10px 12px;
+      border-radius: 8px;
+      margin-bottom: 16px;
+      display: none;
+    }
+    .loading {
+      opacity: 0.7;
+      pointer-events: none;
+    }
+    a.clean {
+      text-decoration: none;
+      color: inherit;
+    }
+    .footer {
+      margin-top: 28px;
+      font-size: 12px;
+      color: #666;
+    }
+    .sr { position:absolute; left:-9999px; }
+  </style>
+</head>
+<body>
+  <h1>Auto Gallery (GitHub API)</h1>
+  <p class="note">
+    Drop images into your repo folder and they’ll appear here automatically.
+    Edit the <strong>CONFIG</strong> section in the JS below (4 lines).
+  </p>
+
+  <div id="err" class="error"></div>
+  <div id="grid" class="grid loading" aria-busy="true"></div>
+
+  <p class="footer">
+    Tip: You can embed Title/Caption into each image (XMP/EXIF). This page will pick them up if present (uses <code>exifr</code>).
+  </p>
+
+<script>
+  // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+  // CONFIG — change these 4 lines to match your repo and folder.
+  // Example: https://github.com/YOUR_USERNAME/YOUR_REPO
+  const CONFIG = {
+    owner:  "LedGH",       // <-- your GitHub username
+    repo:   "ledgh.github.io",           // <-- your repo name
+    branch: "main",                // e.g. "main" or "gh-pages"
+    dir:    "portfolio"      // folder in the repo containing images
+  };
+  // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+  // File extensions we’ll show
+  const IMAGE_RE = /\.(jpe?g|png|webp|gif|tiff?|heic)$/i;
+
+  // GitHub API to list files in a path of a repo:
+  // GET https://api.github.com/repos/:owner/:repo/contents/:path?ref=:branch
+  const apiURL = `https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/contents/${CONFIG.dir}?ref=${CONFIG.branch}`;
+
+  // Convert a repo path to a raw file URL:
+  const rawBase = `https://raw.githubusercontent.com/${CONFIG.owner}/${CONFIG.repo}/${CONFIG.branch}/`;
+
+  const $grid = document.getElementById('grid');
+  const $err  = document.getElementById('err');
+
+  async function fetchDir() {
+    const r = await fetch(apiURL, { headers: { 'Accept': 'application/vnd.github+json' } });
+    if (!r.ok) throw new Error(`GitHub API ${r.status}: ${await r.text()}`);
+    return r.json();
+  }
+
+  // Best-effort metadata read (Title/Caption) using exifr (optional)
+  async function readMeta(url) {
+    if (!window.exifr) return {}; // if you removed the exifr script tag
+    try {
+      const res = await fetch(url, { cache: 'no-store' });
+      const buf = await res.arrayBuffer();
+      const data = await exifr.parse(buf, { xmp: true, iptc: true, exif: true });
+      if (!data) return {};
+      // pull common fields
+      const title =
+        (data?.xmp?.['dc:title'] && toText(data.xmp['dc:title'])) ||
+        data?.iptc?.objectName ||
+        data?.ImageDescription || null;
+
+      const caption =
+        (data?.xmp?.['dc:description'] && toText(data.xmp['dc:description'])) ||
+        data?.iptc?.caption ||
+        data?.UserComment || null;
+
+      return { title, caption };
+    } catch (e) {
+      console.warn('Metadata read error:', e.message);
+      return {};
+    }
+  }
+
+  function toText(x) {
+    // dc:title/description can be an array of { value, lang }
+    if (Array.isArray(x) && x.length) return x[0]?.value || null;
+    if (typeof x === 'string') return x;
+    return null;
+  }
+
+  function filenameToTitle(name) {
+    // "my-photo_name-01.jpg" -> "My Photo Name 01"
+    return name
+      .replace(/\.[^.]+$/, '')
+      .replace(/[-_]+/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim()
+      .replace(/(^|\s)\S/g, s => s.toUpperCase());
+  }
+
+  function showError(msg) {
+    $err.style.display = 'block';
+    $err.textContent = msg;
+  }
+
+  function cardTemplate({ rawUrl, title, caption }) {
+    return `
+      <a class="clean" href="${rawUrl}" target="_blank" rel="noopener">
+        <div class="card">
+          <img class="thumb" src="${rawUrl}" alt="${title || 'image'}" loading="lazy" />
+          <div class="meta">
+            <div class="title">${title || 'Untitled'}</div>
+            ${caption ? `<p class="caption">${caption}</p>` : `<span class="badge">No caption</span>`}
+          </div>
+        </div>
+      </a>
+    `;
+  }
+
+  (async function init() {
+    try {
+      const list = await fetchDir();
+
+      // filter only files w/ image extensions; ignore subfolders
+      const images = list
+        .filter(entry => entry.type === 'file' && IMAGE_RE.test(entry.name))
+        // newest first by GitHub "updated_at" isn't here; we can sort by name descending if you use date prefixes
+        .sort((a,b) => a.name.localeCompare(b.name)) // tweak if you number files
+        ;
+
+      if (images.length === 0) {
+        showError(`No images found in "${CONFIG.dir}". Add a few and refresh.`);
+        $grid.classList.remove('loading');
+        $grid.setAttribute('aria-busy', 'false');
+        return;
+      }
+
+      // Render cards quickly with filename-based titles; then enhance with metadata as it arrives
+      const skeleton = await Promise.all(images.map(async (it) => {
+        const rawUrl = rawBase + `${CONFIG.dir}/${encodeURIComponent(it.name)}`.replace(/%2F/g, '/');
+        const title = filenameToTitle(it.name);
+        return { rawUrl, title, caption: null, name: it.name };
+      }));
+
+      $grid.innerHTML = skeleton.map(cardTemplate).join('');
+      $grid.classList.remove('loading');
+      $grid.setAttribute('aria-busy', 'false');
+
+      // Progressive metadata enhancement (non-blocking)
+      skeleton.forEach(async (item, idx) => {
+        const meta = await readMeta(item.rawUrl);
+        if (meta.title || meta.caption) {
+          const title = meta.title || filenameToTitle(item.name);
+          const caption = meta.caption || null;
+
+          // Replace the card’s HTML
+          const child = $grid.children[idx];
+          if (child) child.outerHTML = cardTemplate({ rawUrl: item.rawUrl, title, caption });
+        }
+      });
+
+    } catch (e) {
+      console.error(e);
+      showError('Could not load folder from GitHub. Double-check CONFIG (owner/repo/branch/dir) and that the repo is public.');
+      $grid.classList.remove('loading');
+      $grid.setAttribute('aria-busy', 'false');
+    }
+  })();
+</script>
+</body>
+</html>

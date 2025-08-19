@@ -11,7 +11,18 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
         <link rel="stylesheet" href="css/styles.css">
         <style>
-
+            a:link {
+              color: #ce2029;
+            }
+            a:visited  {
+              color: #ce2029;
+            }
+            a:hover {
+              color: #ce2029;
+            }
+            a:active {
+              color: #ce2029;
+            }
         </style>
     </head>
 
@@ -37,7 +48,7 @@
                 <div class="container">
                     <h1 class="top_text">Work</h1>
                     <!-- Introductory text -->
-                    <p style="text-align: center;">For a more complete overview, <a href="https://drive.google.com/drive/folders/14eXnu7nb4BhoxxVr0fQZOpU5mirmFVpn?usp=drive_link">click here.</a></p>
+                    <p style="text-align: center;">For a more complete overview, <a href="https://drive.google.com/drive/folders/14eXnu7nb4BhoxxVr0fQZOpU5mirmFVpn?usp=drive_link" target="_blank">click here.</a></p>
             
                     <div class="row">
                         <!-- Portfolio Item 1 -->
@@ -77,14 +88,14 @@
                     <div class="row">
                         <!-- Portfolio Item 4 -->
                         <div class="col-sm-4 portfolio-item">
-  <a href="https://docs.google.com/presentation/d/14gSRhUhZukIYc09eZKIAvVAPLt3We_jP?rtpof=true&usp=drive_fs" target="_blank">
-      <img src="portfolio/Untitled-1.png" class="colmedia">
-  </a>
-  <div class="caption">
-      <h3>Handmade Album Cover</h3>
-      <p>A fictional cover for Daft Punk's <i>Giorgio by Moroder</i></p>
-  </div>
-</div>
+                          <a href="https://docs.google.com/presentation/d/14gSRhUhZukIYc09eZKIAvVAPLt3We_jP?rtpof=true&usp=drive_fs" target="_blank">
+                             <img src="portfolio/Untitled-1.png" class="colmedia">
+                           </a>
+                        <div class="caption">
+                           <h3>Handmade Album Cover</h3>
+                           <p>A fictional cover for Daft Punk's <i>Giorgio by Moroder</i></p>
+                        </div>
+                      </div>
 
 
             
@@ -184,7 +195,7 @@
 
             <div class="container">
               <div id="flashEffect">
-              <img class="bigimg" src="portfolio/photography/Artboard 5.png" style="width: 100%;">
+              <img class="bigimg" src="portfolio/photography/Artboard 5.jpg" style="width: 100%;">
               </div>
             </div>
               <br>
@@ -228,7 +239,7 @@
                     <a href="mailto:luke.eldib@mail.citytech.cuny.edu?subject=Portfolio" target="_blank">
                       <img src="https://icon.signature.email/social/email-square-large-1493b3-FFFFFF.png" alt="Email" style="width: 80px; height: 80px;">
                     </a>
-                    <a href="https://www.youtube.com/@ledbeirut" target="_blank">
+                    <a href="https://www.youtube.com/@ledbeirut/videos" target="_blank">
                       <img src="https://icon.signature.email/social/youtube-square-large-ff0000-FFFFFF.png" alt="YouTube" style="width: 80px; height: 80px;">
                     </a>
                 </div>
@@ -284,18 +295,18 @@
               <div class="row">
                 <div class="col-sm-4 text-center"><a href="https://www.instagram.com/ledbeirut/" target="_blank" style="color: #fe0077;"><strong>@ledbeirut</strong></a><br>For photography.</div>
                 <div class="col-sm-4 text-center"><a href="mailto:luke.eldib@gmail.com?subject=Portfolio" target="_blank" style="color: #0c94b4;"><Strong>Luke.eldib@gmail.com</Strong></a><br>For business inquiries.</div>
-                <div class="col-sm-4 text-center"><a href="https://www.youtube.com/@ledbeirut" target="_blank" style="color: #ff0000;"><strong>@ledbeirut</strong></a><br> For film/video.</div>
+                <div class="col-sm-4 text-center"><a href="https://www.youtube.com/@ledbeirut/videos" target="_blank" style="color: #ff0000;"><strong>@ledbeirut</strong></a><br> For film/video.</div>
               </div>
               <hr><hr><hr><hr><hr>
-            <p style="text-align: center; color: #fe5000;">This website, and all it's contents, were created entirely by Luke El Dib, who is the sole owner.</p>
+            <p style="text-align: center; color: #ce2029;">This website, and all it's contents, were created entirely by Luke El Dib, who is the sole owner.</p>
           </section>
         </main>
         <nav>
           <ul>
-            <li><a href="#name">Home</a></li>
-            <li><a href="#work">Work</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="#contact">Contact</a></li>
+            <li><a href="#name" style="color:#ffffff">Home</a></li>
+            <li><a href="#work" style="color:#ffffff">Work</a></li>
+            <li><a href="#about" style="color:#ffffff">About</a></li>
+            <li><a href="#contact" style="color:#ffffff">Contact</a></li>
           </ul>
         </nav>
 
@@ -349,6 +360,33 @@ var flashElement = document.getElementById('flashEffect');
    this.classList.remove('flash');
 });
 </script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var portfolioItems = document.querySelectorAll('.portfolio-item');
+
+    portfolioItems.forEach(function(item) {
+      var image = item.querySelector('.colmedia');
+      var caption = item.querySelector('.caption');
+
+      image.addEventListener('mouseover', function() {
+        caption.classList.add('disable-pointer-events');
+      });
+
+      image.addEventListener('mouseleave', function() {
+        caption.classList.remove('disable-pointer-events');
+      });
+
+      caption.addEventListener('mouseover', function() {
+        caption.classList.add('disable-pointer-events');
+      });
+
+      caption.addEventListener('mouseleave', function() {
+        caption.classList.remove('disable-pointer-events');
+      });
+    });
+  });
+</script>
 <!-- <script>
   window.addEventListener('load', function() {
     adjustIframeAndCaption();
@@ -387,5 +425,126 @@ there is a hell, and you're looking at it-->
 
 
 <!-- The things I do for love... -->
+        <!-- Popup overlay -->
+<!-- Popup overlay -->
+<div id="overlay">
+  <div id="popup">
+    <h1>Heads up!</h1>
+    <p>This site is a work in progress, as well as its contents.</p>
+    <p>If you're on a PC/Laptop, try my <a href="/console/" target="_blank" style="color:#fe5000;">experimental portfolio!</a></p>
+      <br>
+    <div class="popup-socials">
+      <div>
+        <a href="https://www.instagram.com/ledbeirut/" target="_blank" style="color: #fe0077;"><strong>@ledbeirut</strong></a>
+        <br><span>For photography.</span>
+      </div>
+      <div>
+        <a href="https://www.youtube.com/@ledbeirut/videos" target="_blank" style="color: #ff0000;"><strong>@ledbeirut</strong></a>
+        <br><span>For film/video.</span>
+      </div>
+    </div>
+    <div style="margin-top: 1rem;">
+  <button onclick="closePopup()" style="margin-right: 10px;">Enter Site</button>
+  <button onclick="stopShowingPopup()">I get it, please stop</button>
+</div>
+
+  </div>
+</div>
+
+<style>
+  #overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+  }
+
+  #popup {
+    background-color: white;
+    color: black;
+    padding: 2rem;
+    border-radius: 8px;
+    max-width: 400px;
+    text-align: center;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+  }
+
+  #popup button {
+    margin-top: 1rem;
+    padding: 0.5rem 1rem;
+    background: #333;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  /* Dark mode overrides */
+  body.dark-mode #popup {
+    background-color: #1d1d1b;
+    color: white;
+  }
+
+  body.dark-mode #popup button {
+    background-color: #ece81a;
+    color: black;
+  }
+
+  body.dark-mode #popup button:hover {
+    background-color: #fc8f32;
+  }
+.popup-socials {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  text-align: center;
+}
+
+.popup-socials div {
+  min-width: 120px;
+}
+
+#popup a {
+  display: block;
+  font-size: 1.1rem;
+}
+
+#popup span {
+  font-size: 0.9rem;
+  color: inherit;
+}
+
+</style>
+
+<script>
+  function closePopup() {
+    document.getElementById('overlay').style.display = 'none';
+  }
+
+  function stopShowingPopup() {
+    const now = new Date();
+    localStorage.setItem('popupDismissedUntil', now.getTime() + 86400000); // 24 hours in ms
+    closePopup();
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const dismissedUntil = localStorage.getItem('popupDismissedUntil');
+    const now = new Date().getTime();
+
+    if (dismissedUntil && now < dismissedUntil) {
+      closePopup(); // don't show popup if still within 24h window
+    }
+  });
+</script>
+
+<script data-goatcounter="https://ledop.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+
     </body>
     </html>
