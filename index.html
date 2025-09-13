@@ -560,7 +560,6 @@ there is a hell, and you're looking at it-->
 const YT_API_KEY = 'AIzaSyDTB2z9icMkc0aN2MxT2KC0363xfqdveHw';
 const channelIds = [
   'UCPbChtKz04W8Xh_otbBVvaw',
-  // 'UCxxxxxxxxxxxxxxxxxxxxxx',
 ];
 
 const MAX_PER_CHANNEL = 6;
@@ -582,30 +581,55 @@ function renderVideoCard({ videoId, title, channelTitle }) {
   return col;
 }
 
+// --- API fetch ---
 async function fetchChannelVideos(channelId, maxResults = 6) {
-  const url = new URL('https://www.googleapis.com/youtube/v3/search');
+  const playlistId = 'UU' + channelId.slice(2); // uploads playlist
+  const url = new URL('https://www.googleapis.com/youtube/v3/playlistItems');
   url.searchParams.set('key', YT_API_KEY);
-  url.searchParams.set('part', 'snippet');
-  url.searchParams.set('channelId', channelId);
-  url.searchParams.set('order', 'date');
-  url.searchParams.set('type', 'video');
+  url.searchParams.set('part', 'snippet,contentDetails');
+  url.searchParams.set('playlistId', playlistId);
   url.searchParams.set('maxResults', String(maxResults));
+
   const res = await fetch(url);
-  if (!res.ok) throw new Error('YouTube API error for channel ' + channelId);
-  const data = await res.json();
-  return data.items.map(item => ({
-    videoId: item.id.videoId,
+  const body = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    console.error('YouTube API error', res.status, body);
+    throw new Error(body?.error?.message || 'YouTube API error');
+  }
+
+  return body.items.map(item => ({
+    videoId: (item.contentDetails && item.contentDetails.videoId) ||
+             (item.snippet && item.snippet.resourceId && item.snippet.resourceId.videoId),
     title: item.snippet.title,
-    channelTitle: item.snippet.channelTitle
+    channelTitle: item.snippet.videoOwnerChannelTitle || item.snippet.channelTitle
   }));
 }
 
+// --- Cache wrapper ---
+async function cachedFetchChannelVideos(channelId, maxResults = 6, ttlMs = 15*60*1000) {
+  const key = `ytUploads:${channelId}:${maxResults}`;
+  const now = Date.now();
+  try {
+    const cached = JSON.parse(localStorage.getItem(key) || 'null');
+    if (cached && (now - cached.t) < ttlMs) {
+      return cached.data;
+    }
+  } catch (_) {}
+
+  const data = await fetchChannelVideos(channelId, maxResults);
+  try {
+    localStorage.setItem(key, JSON.stringify({ t: now, data }));
+  } catch (_) {}
+  return data;
+}
+
+// --- DOM ready ---
 document.addEventListener('DOMContentLoaded', async () => {
   const grid = document.getElementById('youtube-video-grid');
   if (!grid) return;
   try {
     const allLists = await Promise.all(
-      channelIds.map(id => fetchChannelVideos(id, MAX_PER_CHANNEL))
+      channelIds.map(id => cachedFetchChannelVideos(id, MAX_PER_CHANNEL))
     );
     allLists.forEach(list => list.forEach(v => grid.appendChild(renderVideoCard(v))));
   } catch (e) {
@@ -623,18 +647,3 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     </body>
     </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
