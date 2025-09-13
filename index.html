@@ -166,7 +166,8 @@
 </script>
                     </div>
 <!-- Videos -->
-<div class="row g-4" id="youtube-video-grid" aria-live="polite"></div>
+<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 gx-4 gy-4"
+     id="youtube-video-grid" aria-live="polite"></div>
                 </div>
 
             </section>
@@ -568,7 +569,7 @@ function renderVideoCard({ videoId, title, channelTitle }) {
   const col = document.createElement('div');
   col.className = 'col-sm-4 video-item';
   col.innerHTML = `
-    <div class="ratio ratio-16x9" style="border-radius:10px; overflow:hidden;">
+    <div class="ratio ratio-16x9" style="overflow:hidden;">
       <iframe
         src="https://www.youtube-nocookie.com/embed/${videoId}?rel=0&modestbranding=1"
         title="${title.replace(/"/g, '&quot;')}"
@@ -622,6 +623,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     </body>
     </html>
+
 
 
 
