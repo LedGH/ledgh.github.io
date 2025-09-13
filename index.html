@@ -165,9 +165,11 @@
   })();
 </script>
                     </div>
-                    <div class="row">
-                        <iframe id="ytplayer" type="text/html" width="720" height="405" src="https://www.youtube.com/embed/?listType=user_uploads&list=UCPbChtKz04W8Xh_otbBVvaw" frameborder="0" allowfullscreen></iframe>
-                    </div>
+<!-- Videos -->
+<div class="row" style="margin-top: 40px;">
+  <h1 class="top_text">Video</h1>
+</div>
+<div class="row g-4" id="youtube-grid"></div>
                 </div>
 
             </section>
@@ -556,11 +558,54 @@ there is a hell, and you're looking at it-->
   });
 </script>
 
+<script>
+  // List ALL your channel IDs here (must start with "UC")
+  const channelUCIds = [
+    'UCPbChtKz04W8Xh_otbBVvaw', // @ledbeirut
+    // 'UCxxxxxxxxxxxxxxxxxxxxxx', // add more
+    // 'UCyyyyyyyyyyyyyyyyyyyyyy'
+  ];
+
+  // Convert UC… -> UU… (Uploads playlist)
+  const uploadsId = uc => 'UU' + uc.slice(2);
+
+  // Render to grid
+  document.addEventListener('DOMContentLoaded', () => {
+    const grid = document.getElementById('youtube-grid');
+    if (!grid) return;
+
+    channelUCIds.forEach((ucId) => {
+      const listId = uploadsId(ucId);
+      const col = document.createElement('div');
+      col.className = 'col-sm-4 portfolio-item';
+
+      col.innerHTML = `
+        <div class="ratio ratio-16x9" style="border-radius:10px; overflow:hidden;">
+          <iframe
+            src="https://www.youtube-nocookie.com/embed/videoseries?list=${listId}&rel=0&modestbranding=1"
+            title="YouTube uploads"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen
+          ></iframe>
+        </div>
+        <div class="caption">
+          <h3 class="h3space">YouTube — Latest uploads</h3>
+          <p>Newest videos from this channel.</p>
+        </div>
+      `;
+      grid.appendChild(col);
+    });
+  });
+</script>
+
+        
 <script data-goatcounter="https://ledop.goatcounter.com/count"
         async src="//gc.zgo.at/count.js"></script>
 
     </body>
     </html>
+
 
 
 
