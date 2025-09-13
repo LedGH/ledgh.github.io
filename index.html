@@ -166,10 +166,7 @@
 </script>
                     </div>
 <!-- Videos -->
-<div class="row" style="margin-top: 40px;">
-  <h1 class="top_text">Video</h1>
-</div>
-<div class="row g-4" id="youtube-grid"></div>
+<div class="row g-4" id="youtube-grid" aria-live="polite"></div>
                 </div>
 
             </section>
@@ -559,45 +556,69 @@ there is a hell, and you're looking at it-->
 </script>
 
 <script>
-  // List ALL your channel IDs here (must start with "UC")
-  const channelUCIds = [
-    'UCPbChtKz04W8Xh_otbBVvaw', // @ledbeirut
-    // 'UCxxxxxxxxxxxxxxxxxxxxxx', // add more
-    // 'UCyyyyyyyyyyyyyyyyyyyyyy'
-  ];
+const YT_API_KEY = 'AIzaSyDTB2z9icMkc0aN2MxT2KC0363xfqdveHw';
+const channelIds = [
+  'UCPbChtKz04W8Xh_otbBVvaw',
+  // 'UCxxxxxxxxxxxxxxxxxxxxxx',
+];
 
-  // Convert UC… -> UU… (Uploads playlist)
-  const uploadsId = uc => 'UU' + uc.slice(2);
+const MAX_PER_CHANNEL = 6;
 
-  // Render to grid
-  document.addEventListener('DOMContentLoaded', () => {
-    const grid = document.getElementById('youtube-grid');
-    if (!grid) return;
+function renderVideoCard({ videoId, title, channelTitle }) {
+  const col = document.createElement('div');
+  col.className = 'col-sm-4 video-item';
+  col.innerHTML = `
+    <div class="ratio ratio-16x9" style="border-radius:10px; overflow:hidden;">
+      <iframe
+        src="https://www.youtube-nocookie.com/embed/${videoId}?rel=0&modestbranding=1"
+        title="${title.replace(/"/g, '&quot;')}"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowfullscreen
+      ></iframe>
+    </div>
+    <div class="meta">
+      <h6>${title}</h6>
+      <p>${channelTitle}</p>
+    </div>
+  `;
+  return col;
+}
 
-    channelUCIds.forEach((ucId) => {
-      const listId = uploadsId(ucId);
-      const col = document.createElement('div');
-      col.className = 'col-sm-4 portfolio-item';
+async function fetchChannelVideos(channelId, maxResults = 6) {
+  const url = new URL('https://www.googleapis.com/youtube/v3/search');
+  url.searchParams.set('key', YT_API_KEY);
+  url.searchParams.set('part', 'snippet');
+  url.searchParams.set('channelId', channelId);
+  url.searchParams.set('order', 'date');
+  url.searchParams.set('type', 'video');
+  url.searchParams.set('maxResults', String(maxResults));
+  const res = await fetch(url);
+  if (!res.ok) throw new Error('YouTube API error for channel ' + channelId);
+  const data = await res.json();
+  return data.items.map(item => ({
+    videoId: item.id.videoId,
+    title: item.snippet.title,
+    channelTitle: item.snippet.channelTitle
+  }));
+}
 
-      col.innerHTML = `
-        <div class="ratio ratio-16x9" style="border-radius:10px; overflow:hidden;">
-          <iframe
-            src="https://www.youtube-nocookie.com/embed/videoseries?list=${listId}&rel=0&modestbranding=1"
-            title="YouTube uploads"
-            frameborder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowfullscreen
-          ></iframe>
-        </div>
-        <div class="caption">
-          <h3 class="h3space">YouTube — Latest uploads</h3>
-          <p>Newest videos from this channel.</p>
-        </div>
-      `;
-      grid.appendChild(col);
-    });
-  });
+document.addEventListener('DOMContentLoaded', async () => {
+  const grid = document.getElementById('youtube-video-grid');
+  if (!grid) return;
+  try {
+    const allLists = await Promise.all(
+      channelIds.map(id => fetchChannelVideos(id, MAX_PER_CHANNEL))
+    );
+    allLists.forEach(list => list.forEach(v => grid.appendChild(renderVideoCard(v))));
+  } catch (e) {
+    console.error(e);
+    grid.innerHTML = `<p style="opacity:.8">Couldn’t load videos right now.</p>`;
+  }
+});
 </script>
+
+
 
         
 <script data-goatcounter="https://ledop.goatcounter.com/count"
@@ -605,6 +626,7 @@ there is a hell, and you're looking at it-->
 
     </body>
     </html>
+
 
 
 
