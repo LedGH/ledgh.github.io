@@ -2,22 +2,21 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Gallery — Luke El Dib</title>
+  <title>Luke El Dib - Gallery</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <!-- Your site styles & Bootstrap -->
+  <!-- Bootstrap (same as main site) -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-  <link rel="stylesheet" href="css/styles.css">
+
+  <!-- IMPORTANT: absolute path so it loads from anywhere -->
+  <link rel="stylesheet" href="/css/styles.css">
 
   <style>
-    /* Keep links your red palette like the main page */
+    /* Match link color from your main page */
     a:link, a:visited, a:hover, a:active { color: #ce2029; }
 
-    /* Gallery grid matches your Work grid spacing */
-    .gallery-grid { }
-
-    /* Tiles: no captions, clean hover */
+    /* Tiles: no captions, subtle hover */
     .gallery-item { position: relative; }
     .gallery-item .thumb-wrap {
       position: relative; width: 100%; aspect-ratio: 4/3; overflow: hidden;
@@ -47,13 +46,11 @@
     .lb-prev { left: 18px; }
     .lb-next { right: 18px; }
     .lb-btn:hover { background: #ffffff20; }
-
-    /* Dark-mode popup styles from your site already handled by body.dark-mode */
   </style>
 </head>
 
 <body>
-  <!-- Dark mode toggle (same markup / id as your main page) -->
+  <!-- Same dark-mode toggle markup/id as your main page -->
   <label class="switch">
     <input type="checkbox" id="dark-mode-toggle">
     <span class="slider round"></span>
@@ -64,22 +61,23 @@
       <div class="container">
         <div id="name" class="mt-4 mb-2">
           <h2>LUKE <a class="eldib">EL DIB</a></h2>
+          
           <h6 style="color:#fe5000;"><i>designer, engineer, developer</i></h6>
         </div>
 
         <hr style="margin-top: 40px; margin-bottom: 40px;">
         <h1 class="top_text text-center">Gallery</h1>
 
-        <!-- Grid (same gutter feel as Work) -->
-        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 gx-4 gy-4 gallery-grid" id="gallery-grid" aria-live="polite"></div>
-        <div id="gallery-status" class="text-center" style="opacity:.8; margin: 20px 0;"></div>
+        <!-- Grid with same spacing vibe as Work -->
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 gx-4 gy-4" id="gallery-grid" aria-live="polite"></div>
+        <div id="gallery-status" class="text-center" style="opacity:.8; margin:20px 0;"></div>
 
         <hr style="margin-top: 60px; margin-bottom: 60px;">
       </div>
     </section>
   </main>
 
-  <!-- Simple lightbox -->
+  <!-- Lightbox -->
   <div id="lightbox" class="lightbox" aria-modal="true" role="dialog">
     <button class="lb-btn lb-close" aria-label="Close">✕</button>
     <button class="lb-btn lb-prev" aria-label="Previous">‹</button>
@@ -88,14 +86,14 @@
   </div>
 
   <script>
-  /** ====== CONFIGURE THESE 4 LINES ====== **/
+  /** ====== YOUR REPO CONFIG (no quotes in folder) ====== **/
   const OWNER  = 'LedGH';
   const REPO   = 'ledgh.github.io';
-  const FOLDER = 'photo/content';   // e.g. 'portfolio/photography'
+  const FOLDER = photo/content ;  // <- no quotes around this path
   const BRANCH = 'main';
-  /** ===================================== **/
+  /** ================================================ **/
 
-  // ---- Dark mode memory (same as your main page) ----
+  // --- Dark mode memory (same as main page) ---
   (function setupDarkModePersistence() {
     const darkModeToggle = document.getElementById('dark-mode-toggle');
     const pref = localStorage.getItem('darkMode');
@@ -106,12 +104,13 @@
     });
   })();
 
-  // ---- Gallery logic ----
+  // --- Gallery logic ---
   const GRID = document.getElementById('gallery-grid');
   const STATUS = document.getElementById('gallery-status');
   const EXT = ['.jpg','.jpeg','.png','.gif','.webp','.avif'];
 
   const API_URL = `https://api.github.com/repos/${OWNER}/${REPO}/contents/${encodeURIComponent(FOLDER)}?ref=${encodeURIComponent(BRANCH)}`;
+  const RAW_PREFIX = `https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/${FOLDER}/`;
   const CACHE_KEY = `ghGallery:${OWNER}/${REPO}/${FOLDER}@${BRANCH}`;
   const TTL_MS = 15 * 60 * 1000;
 
@@ -122,16 +121,13 @@
   async function initGallery() {
     try {
       files = await getFolderImages();
-      if (!files.length) {
-        STATUS.textContent = 'No images found in this folder.';
-        return;
-      }
+      if (!files.length) { STATUS.textContent = 'No images found in this folder.'; return; }
       STATUS.textContent = '';
       renderGrid(files);
       setupLightbox(files);
     } catch (err) {
       console.error(err);
-      STATUS.textContent = 'Could not load images. Ensure the repo/folder is public.';
+      STATUS.textContent = 'Could not load images. Ensure the repo & folder are public and spelled exactly.';
     }
   }
 
@@ -150,7 +146,7 @@
       .filter(it => it.type === 'file' && EXT.some(ext => it.name.toLowerCase().endsWith(ext)))
       .map(it => ({
         name: it.name,
-        raw: `https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/${FOLDER}/${encodeURIComponent(it.name)}`
+        raw: RAW_PREFIX + encodeURIComponent(it.name)
       }));
 
     try { localStorage.setItem(CACHE_KEY, JSON.stringify({ t: now, data: items })); } catch {}
@@ -172,7 +168,7 @@
     });
   }
 
-  // ---- Lightbox for full-size view, no captions ----
+  // Lightbox (full image on click, no captions)
   function setupLightbox(items) {
     const lb = document.getElementById('lightbox');
     const lbImg = document.getElementById('lb-img');
@@ -187,10 +183,10 @@
     const next = () => open((idx + 1) % items.length);
 
     GRID.addEventListener('click', (e) => {
-      const link = e.target.closest('.gallery-item');
-      if (!link) return;
+      const tile = e.target.closest('.gallery-item');
+      if (!tile) return;
       e.preventDefault();
-      open(parseInt(link.dataset.index, 10));
+      open(parseInt(tile.dataset.index, 10));
     });
 
     btnClose.addEventListener('click', close);
