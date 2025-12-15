@@ -156,6 +156,9 @@
     .panel { height: 100%; display: none; overflow: hidden; min-height: 0; margin: 0; padding: 0; }
     .panel[aria-hidden="false"] { display: block; }
 
+    .grid-videos { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+
     .twoCol {
       height: 100%;
       display: grid;
@@ -351,34 +354,36 @@
       </section>
 
       <!-- VIDEOS (3x2) -->
-      <section class="panel" id="panel-videos" role="tabpanel" aria-labelledby="tab-videos" aria-hidden="true">
-        <div class="grid grid-videos" data-cols="3">
-          <div class="thumb" tabindex="0" data-focusable="true" data-open="https://www.youtube.com/@ledbeirut/videos">
-            <img class="img" src="thumbs/video1.jpg" alt="Video thumb 1" />
-            <div class="thumbLabel">Mushroom God teaser</div>
-          </div>
-          <div class="thumb" tabindex="0" data-focusable="true" data-open="https://www.youtube.com/@ledbeirut/videos">
-            <img class="img" src="thumbs/video2.jpg" alt="Video thumb 2" />
-            <div class="thumbLabel">Daft Punk ASCII promo</div>
-          </div>
-          <div class="thumb" tabindex="0" data-focusable="true" data-open="https://www.youtube.com/@ledbeirut/videos">
-            <img class="img" src="thumbs/video3.jpg" alt="Video thumb 3" />
-            <div class="thumbLabel">Motion design study</div>
-          </div>
-          <div class="thumb" tabindex="0" data-focusable="true" data-open="https://www.youtube.com/@ledbeirut/videos">
-            <img class="img" src="thumbs/video4.jpg" alt="Video thumb 4" />
-            <div class="thumbLabel">Process / BTS</div>
-          </div>
-          <div class="thumb" tabindex="0" data-focusable="true" data-open="https://www.youtube.com/@ledbeirut/videos">
-            <img class="img" src="thumbs/video5.jpg" alt="Video thumb 5" />
-            <div class="thumbLabel">Short clip</div>
-          </div>
-          <div class="thumb" tabindex="0" data-focusable="true" data-open="https://www.youtube.com/@ledbeirut/videos">
-            <img class="img" src="thumbs/video6.jpg" alt="Video thumb 6" />
-            <div class="thumbLabel">Another clip</div>
-          </div>
-        </div>
-      </section>
+<!-- VIDEOS -->
+<section class="panel" id="panel-videos" role="tabpanel" aria-labelledby="tab-videos" aria-hidden="true">
+  <div class="grid grid-videos" id="videosGrid">
+    <div class="thumb" tabindex="0" data-focusable="true" data-dynamic="yt">
+      <img class="img" src="thumbs/video1.jpg" alt="Video" />
+      <div class="thumbLabel">Loading…</div>
+    </div>
+    <div class="thumb" tabindex="0" data-focusable="true" data-dynamic="yt">
+      <img class="img" src="thumbs/video2.jpg" alt="Video" />
+      <div class="thumbLabel">Loading…</div>
+    </div>
+    <div class="thumb" tabindex="0" data-focusable="true" data-dynamic="yt">
+      <img class="img" src="thumbs/video3.jpg" alt="Video" />
+      <div class="thumbLabel">Loading…</div>
+    </div>
+    <div class="thumb" tabindex="0" data-focusable="true" data-dynamic="yt">
+      <img class="img" src="thumbs/video4.jpg" alt="Video" />
+      <div class="thumbLabel">Loading…</div>
+    </div>
+    <div class="thumb" tabindex="0" data-focusable="true" data-dynamic="yt">
+      <img class="img" src="thumbs/video5.jpg" alt="Video" />
+      <div class="thumbLabel">Loading…</div>
+    </div>
+    <div class="thumb" tabindex="0" data-focusable="true" data-dynamic="yt">
+      <img class="img" src="thumbs/video6.jpg" alt="Video" />
+      <div class="thumbLabel">Loading…</div>
+    </div>
+  </div>
+</section>
+
 
       <!-- IMAGES (4x2) -->
       <section class="panel" id="panel-images" role="tabpanel" aria-labelledby="tab-images" aria-hidden="true">
@@ -746,6 +751,76 @@ I am trilingual in English, Arabic and French and am looking to gain meaningful 
         }
       });
     }
+
+    // ===== YouTube RSS (no API key) =====
+const YT_CHANNEL_ID = "UCPbChtKz04W8Xh_otbBVvaw"; // @ledbeirut
+const YT_FALLBACK_URL = "https://www.youtube.com/@ledbeirut/videos";
+
+function ytCacheKey(max) {
+  return `ytRSS:${YT_CHANNEL_ID}:${max}`;
+}
+
+async function fetchLatestUploadsRSS(channelId, max = 6) {
+  const rssUrl = `https://www.youtube.com/feeds/videos.xml?channel_id=${channelId}`;
+  const res = await fetch(rssUrl, { cache: "no-store" });
+  if (!res.ok) throw new Error(`RSS fetch failed: ${res.status}`);
+
+  const xmlText = await res.text();
+  const doc = new DOMParser().parseFromString(xmlText, "text/xml");
+  const entries = Array.from(doc.querySelectorAll("entry")).slice(0, max);
+
+  return entries.map(e => {
+    const id = e.querySelector("yt\\:videoId, videoId")?.textContent?.trim();
+    const title = e.querySelector("title")?.textContent?.trim() || "Untitled";
+    return { id, title };
+  }).filter(v => v.id);
+}
+
+function setVideoThumb(el, video) {
+  el.setAttribute("data-open", `https://www.youtube.com/watch?v=${video.id}`);
+  const img = el.querySelector("img.img");
+  const label = el.querySelector(".thumbLabel");
+  if (img) img.src = `https://i.ytimg.com/vi/${video.id}/hqdefault.jpg`;
+  if (label) label.textContent = video.title;
+}
+
+async function hydrateVideosFromRSS() {
+  const thumbs = Array.from(document.querySelectorAll('#panel-videos [data-dynamic="yt"]'));
+  if (!thumbs.length) return;
+
+  const max = thumbs.length;
+  const key = ytCacheKey(max);
+  const now = Date.now();
+  const ttlMs = 15 * 60 * 1000;
+
+  // try cache first
+  try {
+    const cached = JSON.parse(localStorage.getItem(key) || "null");
+    if (cached && (now - cached.t) < ttlMs && Array.isArray(cached.data)) {
+      cached.data.forEach((v, i) => thumbs[i] && setVideoThumb(thumbs[i], v));
+      return;
+    }
+  } catch (_) {}
+
+  // fetch fresh
+  try {
+    const videos = await fetchLatestUploadsRSS(YT_CHANNEL_ID, max);
+    videos.forEach((v, i) => thumbs[i] && setVideoThumb(thumbs[i], v));
+    try {
+      localStorage.setItem(key, JSON.stringify({ t: now, data: videos }));
+    } catch (_) {}
+  } catch (err) {
+    console.error(err);
+    thumbs.forEach(t => {
+      const label = t.querySelector(".thumbLabel");
+      if (label) label.textContent = "Couldn’t load videos.";
+      t.setAttribute("data-open", YT_FALLBACK_URL);
+    });
+  }
+}
+
+document.addEventListener("DOMContentLoaded", hydrateVideosFromRSS);
+
   </script>
 </body>
 </html>
