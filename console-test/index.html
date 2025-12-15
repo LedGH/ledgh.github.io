@@ -383,7 +383,10 @@
         <div class="twoCol">
           <div class="mediaBox">
             <!-- uses your root file -->
-            <video autoplay muted loop playsinline data-focusable="true">
+            <video  controls
+                    playsinline
+                    data-focusable="true"
+                    id="reelVideo">
               <source src="/Reel.mp4" type="video/mp4" />
               Your browser does not support the video tag.
             </video>
@@ -766,6 +769,35 @@ Based in NYC.
 
     // init
     setActiveTab(activeIndex, false);
+
+    const reel = document.getElementById('reelVideo');
+
+if (reel) {
+  let userPaused = false;
+
+  // When user explicitly pauses
+  reel.addEventListener('pause', () => {
+    // Ignore pauses caused by ending
+    if (!reel.ended) {
+      userPaused = true;
+    }
+  });
+
+  // When user plays again
+  reel.addEventListener('play', () => {
+    userPaused = false;
+  });
+
+  // Loop ONLY if user didn't pause manually
+  reel.addEventListener('ended', () => {
+    if (!userPaused) {
+      reel.currentTime = 0;
+      reel.play();
+    }
+  });
+}
+
   </script>
+  
 </body>
 </html>
