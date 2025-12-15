@@ -21,10 +21,7 @@
       --focus-fg: #000000;
     }
 
-    html, body {
-      height: 100%;
-      overflow: hidden; /* NO SCROLLING */
-    }
+    html, body { height: 100%; overflow: hidden; }
 
     body {
       margin: 0;
@@ -34,27 +31,16 @@
       font-size: 18pt;
       padding: 15px;
       box-sizing: border-box;
-
-      /* IMPORTANT: do NOT pre-wrap the whole page */
       white-space: normal;
-
       display: flex;
       flex-direction: column;
     }
 
-    /* only pre blocks keep monospace formatting */
-    pre {
-      margin: 0;
-      white-space: pre;
-    }
+    pre { margin: 0; white-space: pre; }
 
-    a {
-      color: var(--terminal-accent);
-      text-decoration: none;
-    }
+    a { color: var(--terminal-accent); text-decoration: none; }
     a:hover { text-decoration: underline; }
 
-    /* CRT scanlines */
     body::before {
       content: '';
       position: fixed;
@@ -71,11 +57,7 @@
       z-index: 9999;
     }
 
-    /* ===== Top area ===== */
-    #top {
-      flex: 0 0 auto;
-      margin-bottom: 4px;
-    }
+    #top { flex: 0 0 auto; margin-bottom: 4px; }
 
     .marquee {
       width: 100%;
@@ -87,10 +69,7 @@
       font-size: 12pt;
       opacity: 0.75;
     }
-    @keyframes marquee {
-      0%   { text-indent: 100% }
-      100% { text-indent: -100% }
-    }
+    @keyframes marquee { 0% { text-indent: 100% } 100% { text-indent: -100% } }
 
     .ascii-art {
       display: flex;
@@ -102,52 +81,39 @@
       margin-bottom: 4px;
     }
 
-    .ascii-wrapper {
-      display: inline-block;
-      white-space: nowrap;
-    }
-    .ascii-wrapper pre {
-      line-height: 1.05;
-    }
+    .ascii-wrapper { display: inline-block; white-space: nowrap; }
+    .ascii-wrapper pre { line-height: 1.05; }
 
     .neofetch { text-align: left; max-width: 520px; }
     .neofetch pre { line-height: 1.15; }
 
-    /* ===== WIN95-ISH FRAME ===== */
     .frame {
       flex: 1;
       min-height: 0;
       display: flex;
       flex-direction: column;
-
       background: rgba(0,0,0,0.85);
-
       border-top: 3px solid var(--w95-light);
       border-left: 3px solid var(--w95-light);
       border-right: 3px solid var(--w95-dark);
       border-bottom: 3px solid var(--w95-dark);
-
       box-shadow:
         inset 2px 2px 0 var(--w95-mid),
         inset -2px -2px 0 var(--w95-black);
-
       padding: 10px;
       box-sizing: border-box;
       gap: 10px;
     }
 
-    /* ===== TAB BAR (justified, no gaps) ===== */
     .tabbar {
       display: flex;
       width: 100%;
       user-select: none;
       overflow: hidden;
-
       border-top: 2px solid var(--w95-dark);
       border-left: 2px solid var(--w95-dark);
       border-right: 2px solid var(--w95-light);
       border-bottom: 2px solid var(--w95-light);
-
       box-shadow:
         inset 1px 1px 0 var(--w95-black),
         inset -1px -1px 0 var(--w95-mid);
@@ -157,7 +123,7 @@
       flex: 1 1 0;
       min-width: 0;
       font: inherit;
-      font-weight: 800; /* bold */
+      font-weight: 800;
       color: var(--terminal-primary);
       background: rgba(0,0,0,0.95);
       padding: 8px 10px;
@@ -167,42 +133,27 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-
       border-right: 1px solid var(--w95-dark);
     }
     .tab:last-child { border-right: none; }
+    .tab[aria-selected="true"] { background: rgba(255, 51, 51, 0.12); }
 
-    .tab[aria-selected="true"] {
-      background: rgba(255, 51, 51, 0.12);
-    }
-
-    /* ===== Panel shell ===== */
     .panelShell {
       flex: 1;
       min-height: 0;
       padding: 10px;
-
       border-top: 2px solid var(--w95-dark);
       border-left: 2px solid var(--w95-dark);
       border-right: 2px solid var(--w95-light);
       border-bottom: 2px solid var(--w95-light);
-
       box-shadow:
         inset 1px 1px 0 var(--w95-black),
         inset -1px -1px 0 var(--w95-mid);
-
       overflow: hidden;
       position: relative;
     }
 
-    .panel {
-      height: 100%;
-      display: none;
-      overflow: hidden;
-      min-height: 0;
-      margin: 0;
-      padding: 0;
-    }
+    .panel { height: 100%; display: none; overflow: hidden; min-height: 0; margin: 0; padding: 0; }
     .panel[aria-hidden="false"] { display: block; }
 
     .twoCol {
@@ -251,12 +202,10 @@
     .grid {
       height: 100%;
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 10px;
       overflow: hidden;
     }
 
-    /* per-section grids */
     .grid.grid-videos { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     .grid.grid-images { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 
@@ -294,7 +243,6 @@
       text-overflow: ellipsis;
     }
 
-    /* ===== Highlight inversion ===== */
     .is-highlight {
       background: var(--focus-bg) !important;
       color: var(--focus-fg) !important;
@@ -319,10 +267,9 @@
       body { font-size: 14pt; }
       .ascii-art { gap: 24px; }
       .twoCol { grid-template-columns: 1fr; }
-      .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .tab { font-size: 12pt; }
-      .grid.grid-videos { grid-template-columns: repeat(2, minmax(0, 1fr)); } /* small screen */
-      .grid.grid-images { grid-template-columns: repeat(2, minmax(0, 1fr)); } /* small screen */
+      .grid.grid-videos { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .grid.grid-images { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
   </style>
 </head>
@@ -386,6 +333,7 @@
       <section class="panel" id="panel-reel" role="tabpanel" aria-labelledby="tab-reel" aria-hidden="false">
         <div class="twoCol">
           <div class="mediaBox">
+            <!-- IMPORTANT: keep this focusable for highlight, but we will STOP it from trapping arrows -->
             <video controls playsinline data-focusable="true" tabindex="0" id="reelVideo">
               <source src="/Reel.mp4" type="video/mp4" />
               Your browser does not support the video tag.
@@ -402,7 +350,7 @@
         </div>
       </section>
 
-      <!-- VIDEOS -->
+      <!-- VIDEOS (3x2) -->
       <section class="panel" id="panel-videos" role="tabpanel" aria-labelledby="tab-videos" aria-hidden="true">
         <div class="grid grid-videos" data-cols="3">
           <div class="thumb" tabindex="0" data-focusable="true" data-open="https://www.youtube.com/@ledbeirut/videos">
@@ -432,7 +380,7 @@
         </div>
       </section>
 
-      <!-- IMAGES -->
+      <!-- IMAGES (4x2) -->
       <section class="panel" id="panel-images" role="tabpanel" aria-labelledby="tab-images" aria-hidden="true">
         <div class="grid grid-images" data-cols="4">
           <div class="thumb" tabindex="0" data-focusable="true" data-open="images/fullsize1.jpg"><img class="img" src="images/thumb1.jpg" alt="Image 1" /><div class="thumbLabel">Biel photo essay</div></div>
@@ -451,10 +399,11 @@
         <div class="twoCol">
           <div class="listBox">
             <ul class="bbsList">
-              <li><span class="focusItem" tabindex="0" data-focusable="true" data-open="https://docs.google.com/presentation/d/19_aIOAh1GclhFvJyvExtEZK3YcbxKsBn">WWF Billboard — View</span></li>
-              <li><span class="focusItem" tabindex="0" data-focusable="true" data-open="https://drive.google.com/open?id=19_fbaH1PyPKjrS8Ira8P7b4HnfVaBZzk">Kodak Subway Takeover — View</span></li>
-              <li><span class="focusItem" tabindex="0" data-focusable="true" data-open="https://docs.google.com/presentation/d/14gSRhUhZukIYc09eZKIAvVAPLt3We_jP">Daft Punk Cover — View</span></li>
-              <li><span class="focusItem" tabindex="0" data-focusable="true" data-open="https://drive.google.com/open?id=14jtGJj-15FDFDYqRRCYPMWNFJnRlUCCu">Process Book — View</span></li>
+              <li><span class="focusItem" tabindex="0" data-focusable="true" data-open="https://docs.google.com/presentation/d/19_aIOAh1GclhFvJyvExtEZK3YcbxKsBn?rtpof=true&usp=drive_fs">WWF Billboard — View</span></li>
+              <li><span class="focusItem" tabindex="0" data-focusable="true" data-open="https://drive.google.com/open?id=19_fbaH1PyPKjrS8Ira8P7b4HnfVaBZzk&usp=drive_fs">Kodak Subway Takeover — View</span></li>
+              <li><span class="focusItem" tabindex="0" data-focusable="true" data-open="https://docs.google.com/presentation/d/14gSRhUhZukIYc09eZKIAvVAPLt3We_jP?rtpof=true&usp=drive_fs">Daft Punk Cover — View</span></li>
+              <li><span class="focusItem" tabindex="0" data-focusable="true" data-open="https://drive.google.com/open?id=14jtGJj-15FDFDYqRRCYPMWNFJnRlUCCu&usp=drive_fs">Process Book — View</span></li>
+              <li><span class="focusItem" tabindex="0" data-focusable="true" data-open="https://drive.google.com/drive/folders/14eXnu7nb4BhoxxVr0fQZOpU5mirmFVpn?usp=drive_link">Full Drive Folder — View</span></li>
             </ul>
           </div>
           <div class="mediaBox">
@@ -463,26 +412,25 @@
         </div>
       </section>
 
-      <!-- ABOUT -->
+      <!-- ABOUT (scraped text) -->
       <section class="panel" id="panel-about" role="tabpanel" aria-labelledby="tab-about" aria-hidden="true">
         <div class="listBox" style="height: 100%;">
 <pre style="font-size: 14pt; line-height: 1.35; white-space: pre-wrap;">
-Luke El Dib — designer / developer / builder.
+LUKE EL DIB
 
-I like making work that feels engineered, not just decorated:
-motion graphics, photography, interactive systems, and weird hardware stuff.
+designer, engineer, developer
 
-Trilingual: English / Arabic / French.
-Based in NYC.
+I am trilingual in English, Arabic and French and am looking to gain meaningful work experience while I complete my education in Communication Design. My flexibility, language skills, technology skills and reliability will make me a valuable employee.
 </pre>
         </div>
       </section>
 
-      <!-- CONTACT -->
+      <!-- CONTACT (scraped email + socials) -->
       <section class="panel" id="panel-contact" role="tabpanel" aria-labelledby="tab-contact" aria-hidden="true">
         <div class="listBox" style="height: 100%;">
           <ul class="bbsList">
             <li><span class="focusItem" tabindex="0" data-focusable="true" data-open="mailto:luke.eldib@gmail.com">Email — luke.eldib@gmail.com</span></li>
+            <li><span class="focusItem" tabindex="0" data-focusable="true" data-open="mailto:luke.eldib@mail.citytech.cuny.edu?subject=Portfolio">Email (City Tech) — luke.eldib@mail.citytech.cuny.edu</span></li>
             <li><span class="focusItem" tabindex="0" data-focusable="true" data-open="https://www.instagram.com/ledbeirut/">Instagram — @ledbeirut</span></li>
             <li><span class="focusItem" tabindex="0" data-focusable="true" data-open="https://www.youtube.com/@ledbeirut/videos">YouTube — @ledbeirut</span></li>
             <li><span class="focusItem" tabindex="0" data-focusable="true" data-open="https://github.com/LedGH/ledgh.github.io/">Source — GitHub</span></li>
@@ -611,11 +559,9 @@ Based in NYC.
         if (dir === 'down'  && dy <=  2) continue;
 
         const dist = Math.hypot(dx, dy);
-
         let offAxis = 0;
         if (dir === 'left' || dir === 'right') offAxis = Math.abs(dy) * 1.35;
         if (dir === 'up'   || dir === 'down')  offAxis = Math.abs(dx) * 1.35;
-
         const score = dist + offAxis;
 
         if (score < bestScore) {
@@ -631,6 +577,10 @@ Based in NYC.
       return f.length ? f[0] : null;
     }
 
+    function panelIsGrid(panel) {
+      return !!panel.querySelector('.grid');
+    }
+
     function activate(el) {
       if (!el) return;
 
@@ -644,14 +594,17 @@ Based in NYC.
       if (el.tagName === 'A' && el.href) { el.click(); return; }
 
       if (el.tagName === 'VIDEO') {
+        // toggle play/pause, then immediately blur so arrows don't get trapped by native controls
         if (el.paused) el.play(); else el.pause();
+        try { el.blur(); } catch(_) {}
+        // keep our highlight "selected" but remove real DOM focus from the video
         return;
       }
 
       el.click?.();
     }
 
-    let mode = 'tabs';        // 'tabs' | 'panel'
+    let mode = 'tabs';
     let currentPanelEl = null;
 
     function enterPanelFocus() {
@@ -684,8 +637,8 @@ Based in NYC.
         return;
       }
 
-      // NEW: "Up" from ANY item returns to the parent tab (your requested behavior)
-      if (dir === 'up') {
+      // FIX: only "Up returns to navbar" for grid panels (Videos/Images)
+      if (dir === 'up' && panelIsGrid(panel)) {
         returnToTabs();
         return;
       }
@@ -700,7 +653,7 @@ Based in NYC.
 
     // Click/touch: highlight + (for thumbs) open
     document.addEventListener('click', (e) => {
-      const focusable = e.target.closest('[data-focusable="true"], .thumb, .focusItem, a[href], button');
+      const focusable = e.target.closest('[data-focusable="true"], .thumb, .focusItem, a[href], button, video');
       if (!focusable) return;
 
       if (focusable.classList.contains('tab')) return;
@@ -721,7 +674,7 @@ Based in NYC.
       tab.addEventListener('touchstart', () => setActiveTab(i, false), { passive: true });
     });
 
-    // PREVENT VIDEO FROM HIJACKING ARROW KEYS (capture)
+    // HARD BLOCK: stop the native <video> element from scrubbing with arrows (capture phase)
     document.addEventListener('keydown', (e) => {
       const tag = e.target?.tagName?.toLowerCase();
       const isEditable = e.target?.isContentEditable;
@@ -748,10 +701,8 @@ Based in NYC.
         if (e.key === 'ArrowDown')  { e.preventDefault(); enterPanelFocus(); }
         if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); enterPanelFocus(); }
       } else {
-        // panel mode
         if (e.key === 'Escape') { e.preventDefault(); returnToTabs(); return; }
 
-        // shift+left/right switches tabs (optional)
         if (e.shiftKey && e.key === 'ArrowRight') { e.preventDefault(); setActiveTab(activeIndex + 1, true); return; }
         if (e.shiftKey && e.key === 'ArrowLeft')  { e.preventDefault(); setActiveTab(activeIndex - 1, true); return; }
 
@@ -763,6 +714,11 @@ Based in NYC.
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
           activate(currentPanelEl);
+
+          // EXTRA FIX: if the active thing is the video, make sure focus is not stuck there
+          if (currentPanelEl && currentPanelEl.tagName === 'VIDEO') {
+            try { document.activeElement?.blur?.(); } catch(_) {}
+          }
         }
       }
     });
