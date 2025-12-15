@@ -630,31 +630,43 @@ I am trilingual in English, Arabic and French and am looking to gain meaningful 
       highlight(tabs[activeIndex]);
     }
 
-    function moveInPanel(dir) {
-      const panel = getActivePanel();
-      const focusables = getPanelFocusables(panel);
-      if (!focusables.length) return;
+function moveInPanel(dir) {
+  const panel = getActivePanel();
+  const focusables = getPanelFocusables(panel);
+  if (!focusables.length) return;
 
-      if (!currentPanelEl || !panel.contains(currentPanelEl)) {
-        currentPanelEl = focusables[0];
-        currentPanelEl.focus?.();
-        highlight(currentPanelEl);
-        return;
-      }
+  if (!currentPanelEl || !panel.contains(currentPanelEl)) {
+    currentPanelEl = focusables[0];
+    currentPanelEl.focus?.();
+    highlight(currentPanelEl);
+    return;
+  }
 
-      // FIX: only "Up returns to navbar" for grid panels (Videos/Images)
-      if (dir === 'up' && panelIsGrid(panel)) {
-        returnToTabs();
-        return;
-      }
+  // Try to move normally first
+  const next = bestCandidateInDirection(currentPanelEl, focusables, dir);
 
-      const next = bestCandidateInDirection(currentPanelEl, focusables, dir);
-      if (next) {
-        currentPanelEl = next;
-        next.focus?.();
-        highlight(next);
-      }
-    }
+  if (next) {
+    currentPanelEl = next;
+    next.focus?.();
+    highlight(next);
+    return;
+  }
+
+  // If there's nowhere to go "up", only then return to tabs — but ONLY if you're already in the top row.
+  if (dir === 'up') {
+    const ys = focusables.map(el => centerOf(el).y);
+    const minY = Math.min(...ys);
+
+    // Anything within this band counts as "top row"
+    const TOP_ROW_BAND_PX = 60;
+
+    const curY = centerOf(currentPanelEl).y;
+    const inTopRow = curY <= (minY + TOP_ROW_BAND_PX);
+
+    if (inTopRow) returnToTabs();
+  }
+}
+
 
     // Click/touch: highlight + (for thumbs) open
     document.addEventListener('click', (e) => {
@@ -752,27 +764,45 @@ I am trilingual in English, Arabic and French and am looking to gain meaningful 
       });
     }
 
-    // ===== YouTube RSS (no API key) =====
+// ===== YouTube Data API (client-side) =====
+// NOTE: This exposes the key in-page. That's normal for simple portfolio use, but keep an eye on quota.
+const YT_API_KEY = 'AIzaSyDTB2z9icMkc0aN2MxT2KC0363xfqdveHw';
 const YT_CHANNEL_ID = "UCPbChtKz04W8Xh_otbBVvaw"; // @ledbeirut
 const YT_FALLBACK_URL = "https://www.youtube.com/@ledbeirut/videos";
 
 function ytCacheKey(max) {
-  return `ytRSS:${YT_CHANNEL_ID}:${max}`;
+  return `ytAPI:${YT_CHANNEL_ID}:${max}`;
 }
 
-async function fetchLatestUploadsRSS(channelId, max = 6) {
-  const rssUrl = `https://www.youtube.com/feeds/videos.xml?channel_id=${channelId}`;
-  const res = await fetch(rssUrl, { cache: "no-store" });
-  if (!res.ok) throw new Error(`RSS fetch failed: ${res.status}`);
+async function fetchChannelUploads(channelId, max = 6) {
+  // Uploads playlist id format: "UU" + channelId without first 2 chars
+  const uploadsPlaylistId = "UU" + channelId.slice(2);
 
-  const xmlText = await res.text();
-  const doc = new DOMParser().parseFromString(xmlText, "text/xml");
-  const entries = Array.from(doc.querySelectorAll("entry")).slice(0, max);
+  const url = new URL("https://www.googleapis.com/youtube/v3/playlistItems");
+  url.searchParams.set("key", YT_API_KEY);
+  url.searchParams.set("part", "snippet,contentDetails");
+  url.searchParams.set("playlistId", uploadsPlaylistId);
+  url.searchParams.set("maxResults", String(max));
 
-  return entries.map(e => {
-    const id = e.querySelector("yt\\:videoId, videoId")?.textContent?.trim();
-    const title = e.querySelector("title")?.textContent?.trim() || "Untitled";
-    return { id, title };
+  const res = await fetch(url.toString(), { cache: "no-store" });
+  const body = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    console.error("YouTube API error", res.status, body);
+    throw new Error(body?.error?.message || "YouTube API error");
+  }
+
+  return (body.items || []).map(item => {
+    const videoId =
+      item?.contentDetails?.videoId ||
+      item?.snippet?.resourceId?.videoId;
+
+    const title = item?.snippet?.title || "Untitled";
+    const thumb =
+      item?.snippet?.thumbnails?.medium?.url ||
+      item?.snippet?.thumbnails?.high?.url ||
+      (videoId ? `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg` : "");
+
+    return { id: videoId, title, thumb };
   }).filter(v => v.id);
 }
 
@@ -780,11 +810,11 @@ function setVideoThumb(el, video) {
   el.setAttribute("data-open", `https://www.youtube.com/watch?v=${video.id}`);
   const img = el.querySelector("img.img");
   const label = el.querySelector(".thumbLabel");
-  if (img) img.src = `https://i.ytimg.com/vi/${video.id}/hqdefault.jpg`;
+  if (img && video.thumb) img.src = video.thumb;
   if (label) label.textContent = video.title;
 }
 
-async function hydrateVideosFromRSS() {
+async function hydrateVideosFromAPI() {
   const thumbs = Array.from(document.querySelectorAll('#panel-videos [data-dynamic="yt"]'));
   if (!thumbs.length) return;
 
@@ -793,7 +823,7 @@ async function hydrateVideosFromRSS() {
   const now = Date.now();
   const ttlMs = 15 * 60 * 1000;
 
-  // try cache first
+  // cache
   try {
     const cached = JSON.parse(localStorage.getItem(key) || "null");
     if (cached && (now - cached.t) < ttlMs && Array.isArray(cached.data)) {
@@ -802,9 +832,9 @@ async function hydrateVideosFromRSS() {
     }
   } catch (_) {}
 
-  // fetch fresh
+  // fetch
   try {
-    const videos = await fetchLatestUploadsRSS(YT_CHANNEL_ID, max);
+    const videos = await fetchChannelUploads(YT_CHANNEL_ID, max);
     videos.forEach((v, i) => thumbs[i] && setVideoThumb(thumbs[i], v));
     try {
       localStorage.setItem(key, JSON.stringify({ t: now, data: videos }));
@@ -819,8 +849,7 @@ async function hydrateVideosFromRSS() {
   }
 }
 
-document.addEventListener("DOMContentLoaded", hydrateVideosFromRSS);
-
+document.addEventListener("DOMContentLoaded", hydrateVideosFromAPI);
   </script>
 </body>
 </html>
