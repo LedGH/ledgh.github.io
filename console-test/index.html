@@ -9,13 +9,16 @@
   <style>
     :root {
       --terminal-primary: #ffffff;
-      --terminal-link: #ff3333;
+      --terminal-accent: #ff3333;
       --terminal-bg: #000;
 
       --w95-light: #d7d7d7;
       --w95-mid: #bdbdbd;
       --w95-dark: #5a5a5a;
       --w95-black: #1a1a1a;
+
+      --focus-bg: var(--terminal-accent);
+      --focus-fg: #000000;
     }
 
     html, body {
@@ -33,37 +36,15 @@
       white-space: pre-wrap;
       box-sizing: border-box;
 
-      /* IMPORTANT: let flex do the layout instead of calc() height guesses */
       display: flex;
       flex-direction: column;
-      gap: 0;
     }
 
     a {
-      color: var(--terminal-link);
+      color: var(--terminal-accent);
       text-decoration: none;
     }
     a:hover { text-decoration: underline; }
-
-    /* ===== Top area (marquee + title) ===== */
-    #top {
-      flex: 0 0 auto;
-    }
-
-    .marquee {
-      width: 100%;
-      overflow: hidden;
-      white-space: nowrap;
-      box-sizing: border-box;
-      animation: marquee 28s linear infinite; /* slower + calmer */
-      margin-bottom: 4px; /* less vertical space */
-      font-size: 12pt;    /* less vertical space */
-      opacity: 0.7;
-    }
-    @keyframes marquee {
-      0%   { text-indent: 100% }
-      100% { text-indent: -100% }
-    }
 
     /* CRT scanlines */
     body::before {
@@ -82,40 +63,47 @@
       z-index: 9999;
     }
 
+    /* ===== Top area ===== */
+    #top {
+      flex: 0 0 auto;
+      margin-bottom: 4px;
+    }
+
+    .marquee {
+      width: 100%;
+      overflow: hidden;
+      white-space: nowrap;
+      box-sizing: border-box;
+      animation: marquee 28s linear infinite;
+      margin-bottom: 4px;
+      font-size: 12pt;
+      opacity: 0.75;
+    }
+    @keyframes marquee {
+      0%   { text-indent: 100% }
+      100% { text-indent: -100% }
+    }
+
     .ascii-art {
       display: flex;
       justify-content: center;
       align-items: flex-start;
-      gap: 80px;           /* was 190px */
+      gap: 80px;
       flex-wrap: wrap;
       text-align: center;
-      margin-bottom: 4px;  /* less vertical space */
+      margin-bottom: 4px;
     }
 
-    .ascii-wrapper {
-      display: inline-block;
-      white-space: nowrap;
-    }
+    .ascii-wrapper { display: inline-block; white-space: nowrap; }
+    .ascii-wrapper pre { line-height: 1.05; margin: 0; }
 
-    .ascii-wrapper pre {
-      line-height: 1.05; /* slightly tighter */
-      margin: 0;
-    }
-
-    .neofetch {
-      text-align: left;
-      max-width: 520px;
-    }
-
-    .neofetch pre {
-      margin: 0;
-      line-height: 1.15;
-    }
+    .neofetch { text-align: left; max-width: 520px; }
+    .neofetch pre { margin: 0; line-height: 1.15; }
 
     /* ===== WIN95-ISH FRAME ===== */
     .frame {
-      flex: 1;        /* fills remaining space under #top */
-      min-height: 0;  /* CRITICAL for flex children to clip properly */
+      flex: 1;
+      min-height: 0;
       display: flex;
       flex-direction: column;
 
@@ -135,53 +123,52 @@
       gap: 10px;
     }
 
-    /* ===== TAB BAR ===== */
+    /* ===== TAB BAR (justified, no gaps) ===== */
     .tabbar {
       display: flex;
-      gap: 6px;
-      flex-wrap: nowrap;   /* optional: keep it strict */
-      overflow: hidden;
+      width: 100%;
       user-select: none;
+      overflow: hidden;
+
+      border-top: 2px solid var(--w95-dark);
+      border-left: 2px solid var(--w95-dark);
+      border-right: 2px solid var(--w95-light);
+      border-bottom: 2px solid var(--w95-light);
+
+      box-shadow:
+        inset 1px 1px 0 var(--w95-black),
+        inset -1px -1px 0 var(--w95-mid);
     }
 
     .tab {
+      flex: 1 1 0;
+      min-width: 0;
       font: inherit;
+      font-weight: 800; /* bold */
       color: var(--terminal-primary);
-      background: rgba(0,0,0,0.9);
-      padding: 6px 10px;
+      background: rgba(0,0,0,0.95);
+      padding: 8px 10px;
       cursor: pointer;
-
-      border-top: 2px solid var(--w95-light);
-      border-left: 2px solid var(--w95-light);
-      border-right: 2px solid var(--w95-dark);
-      border-bottom: 2px solid var(--w95-dark);
-
-      box-shadow:
-        inset 1px 1px 0 var(--w95-mid),
-        inset -1px -1px 0 var(--w95-black);
-
+      border: none;
       outline: none;
       white-space: nowrap;
-    }
+      overflow: hidden;
+      text-overflow: ellipsis;
 
+      /* separators instead of gaps */
+      border-right: 1px solid var(--w95-dark);
+    }
+    .tab:last-child { border-right: none; }
+
+    /* "selected tab" look */
     .tab[aria-selected="true"] {
-      background: rgba(255, 51, 51, 0.10);
-      transform: translateY(1px);
-      border-top: 2px solid var(--w95-mid);
-      border-left: 2px solid var(--w95-mid);
-      border-right: 2px solid var(--w95-dark);
-      border-bottom: 2px solid var(--w95-dark);
+      background: rgba(255, 51, 51, 0.12);
     }
 
-    .tab:focus-visible {
-      outline: 2px dashed var(--terminal-link);
-      outline-offset: 2px;
-    }
-
-    /* ===== PANEL AREA ===== */
+    /* ===== Panel shell ===== */
     .panelShell {
       flex: 1;
-      min-height: 0; /* critical */
+      min-height: 0;
       padding: 10px;
 
       border-top: 2px solid var(--w95-dark);
@@ -197,7 +184,6 @@
       position: relative;
     }
 
-    /* Panels are flex columns now -> no margin collapse weirdness */
     .panel {
       height: 100%;
       display: none;
@@ -205,22 +191,18 @@
       flex-direction: column;
       min-height: 0;
     }
-    .panel[aria-hidden="false"] {
-      display: flex;
-    }
+    .panel[aria-hidden="false"] { display: flex; }
 
-    /* Use h3 for titles (smaller + fits better) */
     .panelTitle {
       margin: 0;
       padding: 0 0 8px 0;
       font-size: 14pt;
-      color: var(--terminal-link);
+      color: var(--terminal-accent);
       flex: 0 0 auto;
     }
 
-    /* Content layouts become flex children */
-    .twoCol,
-    .grid {
+    /* Layouts */
+    .twoCol, .grid {
       flex: 1;
       min-height: 0;
       overflow: hidden;
@@ -232,8 +214,7 @@
       gap: 12px;
     }
 
-    .mediaBox,
-    .listBox {
+    .mediaBox, .listBox {
       height: 100%;
       border-top: 2px solid var(--w95-dark);
       border-left: 2px solid var(--w95-dark);
@@ -245,8 +226,7 @@
       overflow: hidden;
     }
 
-    .mediaBox video,
-    .mediaBox iframe {
+    .mediaBox video, .mediaBox iframe {
       width: 100%;
       height: 100%;
       border: none;
@@ -267,9 +247,7 @@
       overflow: hidden;
       text-overflow: ellipsis;
     }
-    .bbsMeta {
-      color: rgba(255,51,51,0.65);
-    }
+    .bbsMeta { color: rgba(255,51,51,0.65); }
 
     .grid {
       display: grid;
@@ -277,6 +255,7 @@
       gap: 10px;
     }
 
+    /* Focusable tiles */
     .thumb {
       border-top: 2px solid var(--w95-light);
       border-left: 2px solid var(--w95-light);
@@ -292,6 +271,9 @@
       grid-template-rows: 1fr auto;
       gap: 6px;
       min-height: 0;
+
+      /* make it keyboard-focusable looking */
+      outline: none;
     }
 
     .thumb .img {
@@ -304,10 +286,38 @@
 
     .thumbLabel {
       font-size: 12pt;
-      color: var(--terminal-link);
+      color: var(--terminal-accent);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+    }
+
+    /* ===== The actual "highlight" (inverted) ===== */
+    .is-highlight {
+      background: var(--focus-bg) !important;
+      color: var(--focus-fg) !important;
+    }
+    .is-highlight a {
+      color: var(--focus-fg) !important;
+      text-decoration: underline;
+    }
+    .is-highlight .thumbLabel {
+      color: var(--focus-fg) !important;
+    }
+
+    /* Make focus not rely on browser outline */
+    .tab:focus-visible,
+    .thumb:focus-visible,
+    .focusItem:focus-visible {
+      outline: none;
+    }
+
+    /* "focusable list item" style */
+    .focusItem {
+      display: inline-block;
+      padding: 2px 4px;
+      border-radius: 2px;
+      outline: none;
     }
 
     @media (max-width: 900px) {
@@ -315,7 +325,7 @@
       .ascii-art { gap: 24px; }
       .twoCol { grid-template-columns: 1fr; }
       .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .tabbar { flex-wrap: wrap; } /* allow wrap on small screens */
+      .tab { font-size: 12pt; }
     }
   </style>
 </head>
@@ -351,15 +361,15 @@
 <span style="color:var(--terminal-primary)">guest@lukeeldib.dev</span>
 -------------------
 
-<span style="color:var(--terminal-link)">OS:</span> PortfoliOS v2.3 (BBS build)
-<span style="color:var(--terminal-link)">Host:</span> <span id="host">Detecting...</span>
-<span style="color:var(--terminal-link)">Kernel:</span> 6.9.42-dib
-<span style="color:var(--terminal-link)">Uptime:</span> ∞
-<span style="color:var(--terminal-link)">Shell:</span> /bin/creativity
-<span style="color:var(--terminal-link)">Resolution:</span> <span id="resolution">Loading...</span>
-<span style="color:var(--terminal-link)">DE:</span> imagination
-<span style="color:var(--terminal-link)">Theme:</span> red on black
-<span style="color:var(--terminal-link)">Status:</span> no-scroll mode
+<span style="color:var(--terminal-accent)">OS:</span> PortfoliOS v2.4 (BBS build)
+<span style="color:var(--terminal-accent)">Host:</span> <span id="host">Detecting...</span>
+<span style="color:var(--terminal-accent)">Kernel:</span> 6.9.42-dib
+<span style="color:var(--terminal-accent)">Uptime:</span> <span id="uptime">Loading...</span>
+<span style="color:var(--terminal-accent)">Shell:</span> /bin/creativity
+<span style="color:var(--terminal-accent)">Resolution:</span> <span id="resolution">Loading...</span>
+<span style="color:var(--terminal-accent)">DE:</span> imagination
+<span style="color:var(--terminal-accent)">Theme:</span> white + red on black
+<span style="color:var(--terminal-accent)">Status:</span> keyboard-driven UI
 </pre>
       </div>
     </div>
@@ -381,16 +391,17 @@
         <h3 class="panelTitle">Featured Reel</h3>
         <div class="twoCol">
           <div class="mediaBox">
-            <video controls playsinline>
+            <video controls playsinline data-focusable="true">
               <source src="reel.mp4" type="video/mp4" />
               Your browser does not support the video tag.
             </video>
           </div>
           <div class="listBox">
             <ul class="bbsList">
-              <li><span class="bbsMeta">SYS:</span> Arrow keys switch tabs. Enter activates.</li>
-              <li><span class="bbsMeta">NOTE:</span> No scrolling. Keep this list short.</li>
-              <li>Reel: <a href="#" onclick="return false;">download (coming soon)</a></li>
+              <li><span class="bbsMeta">SYS:</span> ←/→ tabs, ↓ into panel, ↑ back to tabs.</li>
+              <li><span class="bbsMeta">NOTE:</span> Enter activates highlighted item.</li>
+              <li><span class="focusItem" tabindex="0" data-focusable="true" data-open="#">Reel: download (coming soon)</span></li>
+              <li><span class="focusItem" tabindex="0" data-focusable="true" data-open="https://www.youtube.com/@ledbeirut/videos">Go to YouTube</span></li>
               <li>Selected work: motion / photo / design</li>
             </ul>
           </div>
@@ -401,35 +412,35 @@
       <section class="panel" id="panel-videos" role="tabpanel" aria-labelledby="tab-videos" aria-hidden="true">
         <h3 class="panelTitle">Videos</h3>
         <div class="grid">
-          <div class="thumb" data-open="https://www.youtube.com/@ledbeirut/videos">
+          <div class="thumb" tabindex="0" data-focusable="true" data-open="https://www.youtube.com/@ledbeirut/videos">
             <img class="img" src="thumbs/video1.jpg" alt="Video thumb 1" />
             <div class="thumbLabel">Mushroom God teaser</div>
           </div>
-          <div class="thumb" data-open="https://www.youtube.com/@ledbeirut/videos">
+          <div class="thumb" tabindex="0" data-focusable="true" data-open="https://www.youtube.com/@ledbeirut/videos">
             <img class="img" src="thumbs/video2.jpg" alt="Video thumb 2" />
             <div class="thumbLabel">Daft Punk ASCII promo</div>
           </div>
-          <div class="thumb" data-open="https://www.youtube.com/@ledbeirut/videos">
+          <div class="thumb" tabindex="0" data-focusable="true" data-open="https://www.youtube.com/@ledbeirut/videos">
             <img class="img" src="thumbs/video3.jpg" alt="Video thumb 3" />
             <div class="thumbLabel">Motion design study</div>
           </div>
-          <div class="thumb" data-open="https://www.youtube.com/@ledbeirut/videos">
+          <div class="thumb" tabindex="0" data-focusable="true" data-open="https://www.youtube.com/@ledbeirut/videos">
             <img class="img" src="thumbs/video4.jpg" alt="Video thumb 4" />
             <div class="thumbLabel">Process / BTS</div>
           </div>
-          <div class="thumb" data-open="https://www.youtube.com/@ledbeirut/videos">
+          <div class="thumb" tabindex="0" data-focusable="true" data-open="https://www.youtube.com/@ledbeirut/videos">
             <img class="img" src="thumbs/video5.jpg" alt="Video thumb 5" />
             <div class="thumbLabel">Short clip</div>
           </div>
-          <div class="thumb" data-open="https://www.youtube.com/@ledbeirut/videos">
+          <div class="thumb" tabindex="0" data-focusable="true" data-open="https://www.youtube.com/@ledbeirut/videos">
             <img class="img" src="thumbs/video6.jpg" alt="Video thumb 6" />
             <div class="thumbLabel">Another clip</div>
           </div>
-          <div class="thumb" data-open="https://www.youtube.com/@ledbeirut/videos">
+          <div class="thumb" tabindex="0" data-focusable="true" data-open="https://www.youtube.com/@ledbeirut/videos">
             <img class="img" src="thumbs/video7.jpg" alt="Video thumb 7" />
             <div class="thumbLabel">Another clip</div>
           </div>
-          <div class="thumb" data-open="https://www.youtube.com/@ledbeirut/videos">
+          <div class="thumb" tabindex="0" data-focusable="true" data-open="https://www.youtube.com/@ledbeirut/videos">
             <img class="img" src="thumbs/video8.jpg" alt="Video thumb 8" />
             <div class="thumbLabel">Another clip</div>
           </div>
@@ -440,14 +451,14 @@
       <section class="panel" id="panel-images" role="tabpanel" aria-labelledby="tab-images" aria-hidden="true">
         <h3 class="panelTitle">Images</h3>
         <div class="grid">
-          <div class="thumb" data-open="images/fullsize1.jpg"><img class="img" src="images/thumb1.jpg" alt="Image 1" /><div class="thumbLabel">Biel photo essay</div></div>
-          <div class="thumb" data-open="images/fullsize2.jpg"><img class="img" src="images/thumb2.jpg" alt="Image 2" /><div class="thumbLabel">Street shot</div></div>
-          <div class="thumb" data-open="images/fullsize3.jpg"><img class="img" src="images/thumb3.jpg" alt="Image 3" /><div class="thumbLabel">Portrait</div></div>
-          <div class="thumb" data-open="images/fullsize4.jpg"><img class="img" src="images/thumb4.jpg" alt="Image 4" /><div class="thumbLabel">Still</div></div>
-          <div class="thumb" data-open="images/fullsize5.jpg"><img class="img" src="images/thumb5.jpg" alt="Image 5" /><div class="thumbLabel">Still</div></div>
-          <div class="thumb" data-open="images/fullsize6.jpg"><img class="img" src="images/thumb6.jpg" alt="Image 6" /><div class="thumbLabel">Still</div></div>
-          <div class="thumb" data-open="images/fullsize7.jpg"><img class="img" src="images/thumb7.jpg" alt="Image 7" /><div class="thumbLabel">Still</div></div>
-          <div class="thumb" data-open="images/fullsize8.jpg"><img class="img" src="images/thumb8.jpg" alt="Image 8" /><div class="thumbLabel">Still</div></div>
+          <div class="thumb" tabindex="0" data-focusable="true" data-open="images/fullsize1.jpg"><img class="img" src="images/thumb1.jpg" alt="Image 1" /><div class="thumbLabel">Biel photo essay</div></div>
+          <div class="thumb" tabindex="0" data-focusable="true" data-open="images/fullsize2.jpg"><img class="img" src="images/thumb2.jpg" alt="Image 2" /><div class="thumbLabel">Street shot</div></div>
+          <div class="thumb" tabindex="0" data-focusable="true" data-open="images/fullsize3.jpg"><img class="img" src="images/thumb3.jpg" alt="Image 3" /><div class="thumbLabel">Portrait</div></div>
+          <div class="thumb" tabindex="0" data-focusable="true" data-open="images/fullsize4.jpg"><img class="img" src="images/thumb4.jpg" alt="Image 4" /><div class="thumbLabel">Still</div></div>
+          <div class="thumb" tabindex="0" data-focusable="true" data-open="images/fullsize5.jpg"><img class="img" src="images/thumb5.jpg" alt="Image 5" /><div class="thumbLabel">Still</div></div>
+          <div class="thumb" tabindex="0" data-focusable="true" data-open="images/fullsize6.jpg"><img class="img" src="images/thumb6.jpg" alt="Image 6" /><div class="thumbLabel">Still</div></div>
+          <div class="thumb" tabindex="0" data-focusable="true" data-open="images/fullsize7.jpg"><img class="img" src="images/thumb7.jpg" alt="Image 7" /><div class="thumbLabel">Still</div></div>
+          <div class="thumb" tabindex="0" data-focusable="true" data-open="images/fullsize8.jpg"><img class="img" src="images/thumb8.jpg" alt="Image 8" /><div class="thumbLabel">Still</div></div>
         </div>
       </section>
 
@@ -457,11 +468,11 @@
         <div class="twoCol">
           <div class="listBox">
             <ul class="bbsList">
-              <li>WWF Billboard — <a target="_blank" href="https://docs.google.com/presentation/d/19_aIOAh1GclhFvJyvExtEZK3YcbxKsBn">View</a></li>
-              <li>Kodak Subway Takeover — <a target="_blank" href="https://drive.google.com/open?id=19_fbaH1PyPKjrS8Ira8P7b4HnfVaBZzk">View</a></li>
-              <li>Daft Punk Cover — <a target="_blank" href="https://docs.google.com/presentation/d/14gSRhUhZukIYc09eZKIAvVAPLt3We_jP">View</a></li>
-              <li>Process Book — <a target="_blank" href="https://drive.google.com/open?id=14jtGJj-15FDFDYqRRCYPMWNFJnRlUCCu">View</a></li>
-              <li><span class="bbsMeta">TIP:</span> keep 6–10 items max to avoid scrolling.</li>
+              <li><span class="focusItem" tabindex="0" data-focusable="true" data-open="https://docs.google.com/presentation/d/19_aIOAh1GclhFvJyvExtEZK3YcbxKsBn">WWF Billboard — View</span></li>
+              <li><span class="focusItem" tabindex="0" data-focusable="true" data-open="https://drive.google.com/open?id=19_fbaH1PyPKjrS8Ira8P7b4HnfVaBZzk">Kodak Subway Takeover — View</span></li>
+              <li><span class="focusItem" tabindex="0" data-focusable="true" data-open="https://docs.google.com/presentation/d/14gSRhUhZukIYc09eZKIAvVAPLt3We_jP">Daft Punk Cover — View</span></li>
+              <li><span class="focusItem" tabindex="0" data-focusable="true" data-open="https://drive.google.com/open?id=14jtGJj-15FDFDYqRRCYPMWNFJnRlUCCu">Process Book — View</span></li>
+              <li><span class="bbsMeta">TIP:</span> keep 6–10 items max.</li>
             </ul>
           </div>
           <div class="mediaBox">
@@ -491,11 +502,10 @@ Based in NYC.
         <h3 class="panelTitle">Contact</h3>
         <div class="listBox">
           <ul class="bbsList">
-            <li>Email — <a href="mailto:luke.eldib@gmail.com">luke.eldib@gmail.com</a></li>
-            <li>Instagram — <a target="_blank" href="https://www.instagram.com/ledbeirut/">@ledbeirut</a></li>
-            <li>YouTube — <a target="_blank" href="https://www.youtube.com/@ledbeirut/videos">@ledbeirut</a></li>
-            <li>Source — <a target="_blank" href="https://github.com/LedGH/ledgh.github.io/">GitHub</a></li>
-            <li><span class="bbsMeta">SYS:</span> click any thumbnail to open.</li>
+            <li><span class="focusItem" tabindex="0" data-focusable="true" data-open="mailto:luke.eldib@gmail.com">Email — luke.eldib@gmail.com</span></li>
+            <li><span class="focusItem" tabindex="0" data-focusable="true" data-open="https://www.instagram.com/ledbeirut/">Instagram — @ledbeirut</span></li>
+            <li><span class="focusItem" tabindex="0" data-focusable="true" data-open="https://www.youtube.com/@ledbeirut/videos">YouTube — @ledbeirut</span></li>
+            <li><span class="focusItem" tabindex="0" data-focusable="true" data-open="https://github.com/LedGH/ledgh.github.io/">Source — GitHub</span></li>
           </ul>
         </div>
       </section>
@@ -503,6 +513,7 @@ Based in NYC.
   </div>
 
   <script>
+    // ===== Resolution + Browser =====
     function updateResolution() {
       const res = `${window.innerWidth}x${window.innerHeight}`;
       const el = document.getElementById('resolution');
@@ -523,12 +534,73 @@ Based in NYC.
     const hostEl = document.getElementById('host');
     if (hostEl) hostEl.textContent = detectBrowser();
 
-    // ===== Tabs: click/touch + arrow keys =====
+    // ===== Uptime = time since May 23, 2001 =====
+    const BIRTH = new Date('2001-05-23T00:00:00');
+    function pad2(n){ return String(n).padStart(2,'0'); }
+
+    function formatUptime(ms) {
+      const totalSeconds = Math.floor(ms / 1000);
+      const days = Math.floor(totalSeconds / 86400);
+      const hours = Math.floor((totalSeconds % 86400) / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      const seconds = totalSeconds % 60;
+
+      // show years as a human number too (approx using 365.2425)
+      const years = (days / 365.2425).toFixed(6);
+
+      return `${years}y  (${days}d ${pad2(hours)}:${pad2(minutes)}:${pad2(seconds)})`;
+    }
+
+    function updateUptime() {
+      const now = new Date();
+      const diff = now - BIRTH;
+      const el = document.getElementById('uptime');
+      if (el) el.textContent = formatUptime(diff);
+    }
+    updateUptime();
+    setInterval(updateUptime, 1000);
+
+    // ===== Tabs + "focus inside panel" nav =====
     const tabs = Array.from(document.querySelectorAll('.tab[role="tab"]'));
     let activeIndex = tabs.findIndex(t => t.getAttribute('aria-selected') === 'true');
     if (activeIndex < 0) activeIndex = 0;
 
-    function setActive(index, focusTab = true) {
+    // highlight management
+    function clearHighlights() {
+      document.querySelectorAll('.is-highlight').forEach(el => el.classList.remove('is-highlight'));
+    }
+    function highlight(el) {
+      if (!el) return;
+      clearHighlights();
+      el.classList.add('is-highlight');
+    }
+
+    function getActivePanel() {
+      const tab = tabs[activeIndex];
+      return document.getElementById(tab.getAttribute('aria-controls'));
+    }
+
+    function getPanelFocusables(panel) {
+      if (!panel) return [];
+      // Focusables = anything explicitly marked + standard interactive elements
+      const list = Array.from(panel.querySelectorAll('[data-focusable="true"], a[href], button, input, select, textarea, [tabindex]'))
+        .filter(el => {
+          // ignore -1 tabindex and hidden panels
+          const ti = el.getAttribute('tabindex');
+          if (ti === '-1') return false;
+          if (el.offsetParent === null && el.tagName !== 'VIDEO') return false; // basic visibility
+          return true;
+        });
+
+      // de-dupe (rare but can happen)
+      return Array.from(new Set(list));
+    }
+
+    // state: are we in the tab strip or inside panel content?
+    let mode = 'tabs'; // 'tabs' | 'panel'
+    let panelFocusIndex = 0;
+
+    function setActiveTab(index, focusTab = true) {
       activeIndex = (index + tabs.length) % tabs.length;
 
       tabs.forEach((tab, i) => {
@@ -541,38 +613,132 @@ Based in NYC.
       });
 
       if (focusTab) tabs[activeIndex].focus();
+      mode = 'tabs';
+      panelFocusIndex = 0;
+
+      // highlight the active tab
+      highlight(tabs[activeIndex]);
     }
 
-    // Click/touch
-    tabs.forEach((tab, i) => {
-      tab.addEventListener('click', () => setActive(i, false));
-      tab.addEventListener('touchstart', () => setActive(i, false), { passive: true });
+    // Initial highlight
+    highlight(tabs[activeIndex]);
 
-      // Only handle UP/DOWN here (avoid double-firing with global left/right handler)
-      tab.addEventListener('keydown', (e) => {
-        const k = e.key;
-        if (k === 'ArrowDown') { e.preventDefault(); setActive(activeIndex + 1); }
-        if (k === 'ArrowUp')   { e.preventDefault(); setActive(activeIndex - 1); }
-        if (k === 'Enter' || k === ' ') { e.preventDefault(); setActive(i, false); }
-      });
+    // Click tabs
+    tabs.forEach((tab, i) => {
+      tab.addEventListener('click', () => setActiveTab(i, true));
+      tab.addEventListener('touchstart', () => setActiveTab(i, true), { passive: true });
     });
 
-    // Global left/right navigation (works even when focus is inside panels)
+    function enterPanelFocus() {
+      const panel = getActivePanel();
+      const focusables = getPanelFocusables(panel);
+      if (!focusables.length) return;
+
+      mode = 'panel';
+      panelFocusIndex = Math.max(0, Math.min(panelFocusIndex, focusables.length - 1));
+
+      const el = focusables[panelFocusIndex];
+      el.focus?.();
+      highlight(el);
+    }
+
+    function stepPanelFocus(delta) {
+      const panel = getActivePanel();
+      const focusables = getPanelFocusables(panel);
+      if (!focusables.length) return;
+
+      panelFocusIndex = (panelFocusIndex + delta + focusables.length) % focusables.length;
+      const el = focusables[panelFocusIndex];
+      el.focus?.();
+      highlight(el);
+    }
+
+    function returnToTabs() {
+      mode = 'tabs';
+      panelFocusIndex = 0;
+      tabs[activeIndex].focus();
+      highlight(tabs[activeIndex]);
+    }
+
+    // Activate the highlighted item
+    function activateHighlighted() {
+      const el = document.querySelector('.is-highlight');
+      if (!el) return;
+
+      // If it's a thumb or a focusItem with data-open, open it
+      const open = el.getAttribute('data-open');
+      if (open && open !== '#') {
+        if (open.startsWith('mailto:')) {
+          window.location.href = open;
+        } else {
+          window.open(open, '_blank');
+        }
+        return;
+      }
+
+      // If it's a normal link
+      if (el.tagName === 'A' && el.href) {
+        el.click();
+        return;
+      }
+
+      // If it's a video, toggle play
+      if (el.tagName === 'VIDEO') {
+        if (el.paused) el.play();
+        else el.pause();
+        return;
+      }
+
+      // Otherwise click it
+      el.click?.();
+    }
+
+    // Global keyboard navigation
     document.addEventListener('keydown', (e) => {
       const tag = (e.target && e.target.tagName) ? e.target.tagName.toLowerCase() : '';
-      if (tag === 'input' || tag === 'textarea' || e.target?.isContentEditable) return;
+      const isTyping = (tag === 'input' || tag === 'textarea' || e.target?.isContentEditable);
+      if (isTyping) return;
 
-      if (e.key === 'ArrowRight') { e.preventDefault(); setActive(activeIndex + 1); }
-      if (e.key === 'ArrowLeft')  { e.preventDefault(); setActive(activeIndex - 1); }
+      if (mode === 'tabs') {
+        if (e.key === 'ArrowRight') { e.preventDefault(); setActiveTab(activeIndex + 1, true); }
+        if (e.key === 'ArrowLeft')  { e.preventDefault(); setActiveTab(activeIndex - 1, true); }
+        if (e.key === 'ArrowDown')  { e.preventDefault(); enterPanelFocus(); }
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); enterPanelFocus(); }
+      } else if (mode === 'panel') {
+        if (e.key === 'ArrowDown')  { e.preventDefault(); stepPanelFocus(1); }
+        if (e.key === 'ArrowUp')    {
+          e.preventDefault();
+          // if you're at the first focusable, go back to tabs
+          if (panelFocusIndex === 0) returnToTabs();
+          else stepPanelFocus(-1);
+        }
+        if (e.key === 'ArrowRight') { e.preventDefault(); setActiveTab(activeIndex + 1, true); }
+        if (e.key === 'ArrowLeft')  { e.preventDefault(); setActiveTab(activeIndex - 1, true); }
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); activateHighlighted(); }
+        if (e.key === 'Escape') { e.preventDefault(); returnToTabs(); }
+      }
     });
 
-    // Thumbnail open behavior
+    // Clicking a focusable inside a panel should highlight it
     document.addEventListener('click', (e) => {
-      const card = e.target.closest('.thumb');
-      if (!card) return;
-      const url = card.getAttribute('data-open');
-      if (url) window.open(url, '_blank');
+      const focusable = e.target.closest('[data-focusable="true"], .thumb, .focusItem, a[href], button');
+      if (!focusable) return;
+
+      // if you click a tab, don't switch mode to panel
+      if (focusable.classList.contains('tab')) return;
+
+      mode = 'panel';
+      highlight(focusable);
+
+      // if it's a thumb, open it
+      const open = focusable.getAttribute('data-open');
+      if (focusable.classList.contains('thumb') && open) {
+        window.open(open, '_blank');
+      }
     });
+
+    // start correct tab state
+    setActiveTab(activeIndex, false);
   </script>
 </body>
 </html>
