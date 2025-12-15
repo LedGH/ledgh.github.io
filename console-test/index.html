@@ -11,71 +11,35 @@
       --terminal-primary: #ffffff; /* vibrant red */
       --terminal-link: #ff3333;
       --terminal-bg: #000;
+
+      /* Win95-ish border colors */
+      --w95-light: #d7d7d7;
+      --w95-mid: #bdbdbd;
+      --w95-dark: #5a5a5a;
+      --w95-black: #1a1a1a;
     }
 
     html, body {
       height: 100%;
+      overflow: hidden; /* NO SCROLLING */
     }
 
     body {
+      margin: 0;
       background-color: var(--terminal-bg);
       color: var(--terminal-primary);
       font-family: 'Courier New', Courier, monospace;
       font-size: 18pt;
       padding: 15px;
       white-space: pre-wrap;
+      box-sizing: border-box;
     }
 
     a {
       color: var(--terminal-link);
       text-decoration: none;
     }
-    a:hover {
-      text-decoration: underline;
-    }
-
-    .input-wrapper {
-      display: inline-flex;
-      align-items: flex-end;
-    }
-
-    .cursor {
-      width: 10px;
-      height: 2px;
-      background-color: var(--terminal-primary);
-      animation: blink 1s steps(1) infinite;
-      margin-left: 2px;
-    }
-
-    .ascii-wrapper {
-      display: inline-block;
-      animation: asciiMarquee 3s ease-out forwards;
-      white-space: nowrap;
-    }
-
-    @keyframes asciiShift {
-      0%   { filter: hue-rotate(0deg); }
-      100% { filter: hue-rotate(360deg); }
-    }
-
-    .ascii-art {
-      /* animation: asciiShift 30s linear infinite; */ /* DISABLED for now */
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      gap: 190px;
-      margin-bottom: 2em;
-      flex-wrap: wrap;
-      text-align: center;
-    }
-
-    @keyframes blink {
-      50% { background-color: transparent; }
-    }
-
-    .section {
-      margin-top: 2em;
-    }
+    a:hover { text-decoration: underline; }
 
     .marquee {
       width: 100%;
@@ -83,31 +47,14 @@
       white-space: nowrap;
       box-sizing: border-box;
       animation: marquee 18s linear infinite;
+      margin-bottom: 10px;
     }
-
     @keyframes marquee {
       0%   { text-indent: 100% }
       100% { text-indent: -100% }
     }
 
-    #terminal-input {
-      color: var(--terminal-primary);
-      background: none;
-      border: none;
-      font-family: inherit;
-      font-size: inherit;
-      outline: none;
-      display: inline-block;
-      min-width: 1ch;
-      white-space: pre;
-      caret-color: transparent;
-    }
-
-    #response {
-      margin-top: 1em;
-    }
-
-    /* scanlines */
+    /* CRT scanlines */
     body::before {
       content: '';
       position: fixed;
@@ -123,13 +70,236 @@
       pointer-events: none;
       z-index: 9999;
     }
+
+    .ascii-art {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 190px;
+      flex-wrap: wrap;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .ascii-wrapper {
+      display: inline-block;
+      white-space: nowrap;
+    }
+
+    .neofetch {
+      text-align: left;
+      max-width: 520px;
+    }
+
+    /* ====== WIN95-ISH FRAME ====== */
+    .frame {
+      height: calc(100vh - 15px - 15px - 40px - 10px); /* body padding + marquee-ish */
+      /* safer approach: let JS set exact height if you want; this works fine in practice */
+      display: flex;
+      flex-direction: column;
+
+      background: rgba(0,0,0,0.85);
+
+      border-top: 3px solid var(--w95-light);
+      border-left: 3px solid var(--w95-light);
+      border-right: 3px solid var(--w95-dark);
+      border-bottom: 3px solid var(--w95-dark);
+
+      box-shadow:
+        inset 2px 2px 0 var(--w95-mid),
+        inset -2px -2px 0 var(--w95-black);
+
+      padding: 10px;
+      box-sizing: border-box;
+      gap: 10px;
+    }
+
+    /* ====== TAB BAR ====== */
+    .tabbar {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      user-select: none;
+    }
+
+    .tab {
+      font: inherit;
+      color: var(--terminal-primary);
+      background: rgba(0,0,0,0.9);
+      padding: 6px 10px;
+      cursor: pointer;
+
+      border-top: 2px solid var(--w95-light);
+      border-left: 2px solid var(--w95-light);
+      border-right: 2px solid var(--w95-dark);
+      border-bottom: 2px solid var(--w95-dark);
+
+      box-shadow:
+        inset 1px 1px 0 var(--w95-mid),
+        inset -1px -1px 0 var(--w95-black);
+
+      outline: none;
+    }
+
+    .tab[aria-selected="true"] {
+      background: rgba(255, 51, 51, 0.10);
+      transform: translateY(1px);
+      border-top: 2px solid var(--w95-mid);
+      border-left: 2px solid var(--w95-mid);
+      border-right: 2px solid var(--w95-dark);
+      border-bottom: 2px solid var(--w95-dark);
+    }
+
+    .tab:focus-visible {
+      outline: 2px dashed var(--terminal-link);
+      outline-offset: 2px;
+    }
+
+    /* ====== PANEL AREA ====== */
+    .panelShell {
+      flex: 1;
+      min-height: 0; /* critical for flex children sizing */
+      padding: 10px;
+
+      border-top: 2px solid var(--w95-dark);
+      border-left: 2px solid var(--w95-dark);
+      border-right: 2px solid var(--w95-light);
+      border-bottom: 2px solid var(--w95-light);
+
+      box-shadow:
+        inset 1px 1px 0 var(--w95-black),
+        inset -1px -1px 0 var(--w95-mid);
+
+      overflow: hidden; /* NO SCROLLING INSIDE EITHER */
+      position: relative;
+    }
+
+    .panel {
+      height: 100%;
+      display: none;
+      overflow: hidden;
+    }
+    .panel[aria-hidden="false"] {
+      display: block;
+    }
+
+    .panelTitle {
+      margin: 0 0 10px 0;
+      font-size: 16pt;
+      color: var(--terminal-link);
+    }
+
+    /* Simple content layouts */
+    .twoCol {
+      height: calc(100% - 30px);
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 12px;
+      overflow: hidden;
+    }
+
+    .mediaBox {
+      height: 100%;
+      border-top: 2px solid var(--w95-dark);
+      border-left: 2px solid var(--w95-dark);
+      border-right: 2px solid var(--w95-light);
+      border-bottom: 2px solid var(--w95-light);
+      box-shadow: inset 1px 1px 0 var(--w95-black), inset -1px -1px 0 var(--w95-mid);
+      padding: 8px;
+      box-sizing: border-box;
+      overflow: hidden;
+    }
+
+    .mediaBox video,
+    .mediaBox iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+      background: #000;
+    }
+
+    .listBox {
+      height: 100%;
+      border-top: 2px solid var(--w95-dark);
+      border-left: 2px solid var(--w95-dark);
+      border-right: 2px solid var(--w95-light);
+      border-bottom: 2px solid var(--w95-light);
+      box-shadow: inset 1px 1px 0 var(--w95-black), inset -1px -1px 0 var(--w95-mid);
+      padding: 8px;
+      box-sizing: border-box;
+      overflow: hidden;
+    }
+
+    .bbsList {
+      margin: 0;
+      padding-left: 0;
+      list-style: none;
+      font-size: 14pt;
+      line-height: 1.3;
+    }
+    .bbsList li {
+      margin: 0 0 8px 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .bbsMeta {
+      color: rgba(255,51,51,0.65);
+    }
+
+    .grid {
+      height: calc(100% - 30px);
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      overflow: hidden;
+    }
+
+    .thumb {
+      border-top: 2px solid var(--w95-light);
+      border-left: 2px solid var(--w95-light);
+      border-right: 2px solid var(--w95-dark);
+      border-bottom: 2px solid var(--w95-dark);
+      box-shadow: inset 1px 1px 0 var(--w95-mid), inset -1px -1px 0 var(--w95-black);
+      background: rgba(0,0,0,0.9);
+      padding: 6px;
+      box-sizing: border-box;
+      overflow: hidden;
+      cursor: pointer;
+      display: grid;
+      grid-template-rows: 1fr auto;
+      gap: 6px;
+    }
+
+    .thumb .img {
+      width: 100%;
+      height: 100%;
+      background: #0a0a0a;
+      display: block;
+      object-fit: cover;
+    }
+
+    .thumbLabel {
+      font-size: 12pt;
+      color: var(--terminal-link);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Small screen adjustments */
+    @media (max-width: 900px) {
+      body { font-size: 14pt; }
+      .ascii-art { gap: 24px; }
+      .twoCol { grid-template-columns: 1fr; }
+      .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
   </style>
 </head>
 
 <body>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r152/three.min.js"></script>
-
-  <div class="marquee">(c) Luke El Dib. All rights reserved. That's a lie, actually. I don't know anything about copyright law.  Coded this all myself btw. 2025</div>
+  <div class="marquee">(c) Luke El Dib. All rights reserved. That's a lie, actually. I don't know anything about copyright law. Coded this all myself btw. 2025</div>
 
   <div class="ascii-art">
     <div class="ascii-wrapper">
@@ -153,153 +323,178 @@
 </pre>
     </div>
 
-    <div class="neofetch" style="text-align: left;">
+    <div class="neofetch">
 <pre>
 <span style="color:var(--terminal-primary)">guest@lukeeldib.dev</span>
 -------------------
 
-<span style="color:var(--terminal-link)">OS:</span> PortfoliOS v2.2
+<span style="color:var(--terminal-link)">OS:</span> PortfoliOS v2.3 (BBS build)
 <span style="color:var(--terminal-link)">Host:</span> <span id="host">Detecting...</span>
 <span style="color:var(--terminal-link)">Kernel:</span> 6.9.42-dib
 <span style="color:var(--terminal-link)">Uptime:</span> ∞
 <span style="color:var(--terminal-link)">Shell:</span> /bin/creativity
 <span style="color:var(--terminal-link)">Resolution:</span> <span id="resolution">Loading...</span>
 <span style="color:var(--terminal-link)">DE:</span> imagination
-<span style="color:var(--terminal-link)">Theme:</span> #ff3333 on black
-<span style="color:var(--terminal-link)">Font:</span> Courier New 20pt
-<span style="color:var(--terminal-link)">Status:</span> Building something cool...
+<span style="color:var(--terminal-link)">Theme:</span> red on black
+<span style="color:var(--terminal-link)">Status:</span> no-scroll mode
 </pre>
     </div>
   </div>
 
-  <p style="margin: 0.5em 0 0 0">Type "help" for a full list of commands.</p>
+  <div class="frame" id="frame">
+    <div class="tabbar" role="tablist" aria-label="Portfolio sections">
+      <button class="tab" role="tab" aria-selected="true"  aria-controls="panel-reel"   id="tab-reel"   tabindex="0">[1] Reel</button>
+      <button class="tab" role="tab" aria-selected="false" aria-controls="panel-videos" id="tab-videos" tabindex="-1">[2] Videos</button>
+      <button class="tab" role="tab" aria-selected="false" aria-controls="panel-images" id="tab-images" tabindex="-1">[3] Images</button>
+      <button class="tab" role="tab" aria-selected="false" aria-controls="panel-design" id="tab-design" tabindex="-1">[4] Design</button>
+      <button class="tab" role="tab" aria-selected="false" aria-controls="panel-about"  id="tab-about"  tabindex="-1">[5] About</button>
+      <button class="tab" role="tab" aria-selected="false" aria-controls="panel-contact"id="tab-contact"tabindex="-1">[6] Contact</button>
+    </div>
 
-  <div id="output"></div>
+    <div class="panelShell">
+      <!-- REEL -->
+      <section class="panel" id="panel-reel" role="tabpanel" aria-labelledby="tab-reel" aria-hidden="false">
+        <h2 class="panelTitle">Featured Reel</h2>
+        <div class="twoCol">
+          <div class="mediaBox">
+            <!-- Option A: local mp4 -->
+            <video controls playsinline>
+              <source src="reel.mp4" type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
 
-  <div class="section" style="margin: 0.5em 0 0 0">
-    &gt; <span style="color:var(--terminal-primary)">guest@lukeeldib.dev: </span>
-    <div class="input-wrapper">
-      <div id="terminal-input" contenteditable="true" spellcheck="false" autofocus></div>
-      <div class="cursor"></div>
+            <!-- Option B: YouTube embed (uncomment and replace)
+            <iframe
+              src="https://www.youtube.com/embed/YOUR_ID"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen
+            ></iframe>
+            -->
+          </div>
+
+          <div class="listBox">
+            <ul class="bbsList">
+              <li><span class="bbsMeta">SYS:</span> Arrow keys switch tabs. Enter activates.</li>
+              <li><span class="bbsMeta">NOTE:</span> No scrolling. Keep this list short.</li>
+              <li>Reel: <a href="#" onclick="return false;">download (coming soon)</a></li>
+              <li>Selected work: motion / photo / design</li>
+              <li><span class="bbsMeta">TIP:</span> Replace <code>reel.mp4</code> with your real file.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- VIDEOS -->
+      <section class="panel" id="panel-videos" role="tabpanel" aria-labelledby="tab-videos" aria-hidden="true">
+        <h2 class="panelTitle">Videos</h2>
+        <div class="grid">
+          <div class="thumb" data-open="https://www.youtube.com/@ledbeirut/videos">
+            <img class="img" src="thumbs/video1.jpg" alt="Video thumb 1" />
+            <div class="thumbLabel">Mushroom God teaser</div>
+          </div>
+          <div class="thumb" data-open="https://www.youtube.com/@ledbeirut/videos">
+            <img class="img" src="thumbs/video2.jpg" alt="Video thumb 2" />
+            <div class="thumbLabel">Daft Punk ASCII promo</div>
+          </div>
+          <div class="thumb" data-open="https://www.youtube.com/@ledbeirut/videos">
+            <img class="img" src="thumbs/video3.jpg" alt="Video thumb 3" />
+            <div class="thumbLabel">Motion design study</div>
+          </div>
+          <div class="thumb" data-open="https://www.youtube.com/@ledbeirut/videos">
+            <img class="img" src="thumbs/video4.jpg" alt="Video thumb 4" />
+            <div class="thumbLabel">Process / BTS</div>
+          </div>
+          <div class="thumb" data-open="https://www.youtube.com/@ledbeirut/videos">
+            <img class="img" src="thumbs/video5.jpg" alt="Video thumb 5" />
+            <div class="thumbLabel">Short clip</div>
+          </div>
+          <div class="thumb" data-open="https://www.youtube.com/@ledbeirut/videos">
+            <img class="img" src="thumbs/video6.jpg" alt="Video thumb 6" />
+            <div class="thumbLabel">Another clip</div>
+          </div>
+          <div class="thumb" data-open="https://www.youtube.com/@ledbeirut/videos">
+            <img class="img" src="thumbs/video7.jpg" alt="Video thumb 7" />
+            <div class="thumbLabel">Another clip</div>
+          </div>
+          <div class="thumb" data-open="https://www.youtube.com/@ledbeirut/videos">
+            <img class="img" src="thumbs/video8.jpg" alt="Video thumb 8" />
+            <div class="thumbLabel">Another clip</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- IMAGES -->
+      <section class="panel" id="panel-images" role="tabpanel" aria-labelledby="tab-images" aria-hidden="true">
+        <h2 class="panelTitle">Images</h2>
+        <div class="grid">
+          <div class="thumb" data-open="images/fullsize1.jpg"><img class="img" src="images/thumb1.jpg" alt="Image 1" /><div class="thumbLabel">Biel photo essay</div></div>
+          <div class="thumb" data-open="images/fullsize2.jpg"><img class="img" src="images/thumb2.jpg" alt="Image 2" /><div class="thumbLabel">Street shot</div></div>
+          <div class="thumb" data-open="images/fullsize3.jpg"><img class="img" src="images/thumb3.jpg" alt="Image 3" /><div class="thumbLabel">Portrait</div></div>
+          <div class="thumb" data-open="images/fullsize4.jpg"><img class="img" src="images/thumb4.jpg" alt="Image 4" /><div class="thumbLabel">Still</div></div>
+          <div class="thumb" data-open="images/fullsize5.jpg"><img class="img" src="images/thumb5.jpg" alt="Image 5" /><div class="thumbLabel">Still</div></div>
+          <div class="thumb" data-open="images/fullsize6.jpg"><img class="img" src="images/thumb6.jpg" alt="Image 6" /><div class="thumbLabel">Still</div></div>
+          <div class="thumb" data-open="images/fullsize7.jpg"><img class="img" src="images/thumb7.jpg" alt="Image 7" /><div class="thumbLabel">Still</div></div>
+          <div class="thumb" data-open="images/fullsize8.jpg"><img class="img" src="images/thumb8.jpg" alt="Image 8" /><div class="thumbLabel">Still</div></div>
+        </div>
+      </section>
+
+      <!-- DESIGN -->
+      <section class="panel" id="panel-design" role="tabpanel" aria-labelledby="tab-design" aria-hidden="true">
+        <h2 class="panelTitle">Design</h2>
+        <div class="twoCol">
+          <div class="listBox">
+            <ul class="bbsList">
+              <li>WWF Billboard — <a target="_blank" href="https://docs.google.com/presentation/d/19_aIOAh1GclhFvJyvExtEZK3YcbxKsBn">View</a></li>
+              <li>Kodak Subway Takeover — <a target="_blank" href="https://drive.google.com/open?id=19_fbaH1PyPKjrS8Ira8P7b4HnfVaBZzk">View</a></li>
+              <li>Daft Punk Cover — <a target="_blank" href="https://docs.google.com/presentation/d/14gSRhUhZukIYc09eZKIAvVAPLt3We_jP">View</a></li>
+              <li>Process Book — <a target="_blank" href="https://drive.google.com/open?id=14jtGJj-15FDFDYqRRCYPMWNFJnRlUCCu">View</a></li>
+              <li><span class="bbsMeta">TIP:</span> keep 6–10 items max to avoid scrolling.</li>
+            </ul>
+          </div>
+          <div class="mediaBox">
+            <!-- optional: featured image or looping gif -->
+            <img class="img" src="design/featured.jpg" alt="Featured design" />
+          </div>
+        </div>
+      </section>
+
+      <!-- ABOUT -->
+      <section class="panel" id="panel-about" role="tabpanel" aria-labelledby="tab-about" aria-hidden="true">
+        <h2 class="panelTitle">About</h2>
+        <div class="listBox" style="height: calc(100% - 30px);">
+<pre style="margin:0; font-size: 14pt; line-height: 1.35; white-space: pre-wrap;">
+Luke El Dib — designer / developer / builder.
+
+I like making work that feels engineered, not just decorated:
+motion graphics, photography, interactive systems, and weird hardware stuff.
+
+Trilingual: English / Arabic / French.
+Based in NYC.
+</pre>
+        </div>
+      </section>
+
+      <!-- CONTACT -->
+      <section class="panel" id="panel-contact" role="tabpanel" aria-labelledby="tab-contact" aria-hidden="true">
+        <h2 class="panelTitle">Contact</h2>
+        <div class="listBox" style="height: calc(100% - 30px);">
+          <ul class="bbsList">
+            <li>Email — <a href="mailto:luke.eldib@gmail.com">luke.eldib@gmail.com</a></li>
+            <li>Instagram — <a target="_blank" href="https://www.instagram.com/ledbeirut/">@ledbeirut</a></li>
+            <li>YouTube — <a target="_blank" href="https://www.youtube.com/@ledbeirut/videos">@ledbeirut</a></li>
+            <li>Source — <a target="_blank" href="https://github.com/LedGH/ledgh.github.io/">GitHub</a></li>
+            <li><span class="bbsMeta">SYS:</span> click any thumbnail to open.</li>
+          </ul>
+        </div>
+      </section>
     </div>
   </div>
 
   <script>
-    const commandOutput = {
-      whoami: `Luke El Dib — designer, engineer, developer. Trilingual in English, Arabic, and French.\nLooking to gain meaningful work experience while completing a Communication Design degree.`,
-      work: `Biel Photo Essay — <a href="https://drive.google.com/file/d/14hn0GTDkk2Uk5BAbvqQcoM75XUzuVBFu" target="_blank">View</a><br>
-WWF Billboard (1) — <a href="https://docs.google.com/presentation/d/19_aIOAh1GclhFvJyvExtEZK3YcbxKsBn" target="_blank">View</a><br>
-WWF Billboard (2) — <a href="https://docs.google.com/presentation/d/19_aIOAh1GclhFvJyvExtEZK3YcbxKsBn" target="_blank">View</a><br>
-Daft Punk Cover — <a href="https://docs.google.com/presentation/d/14gSRhUhZukIYc09eZKIAvVAPLt3We_jP" target="_blank">View</a><br>
-Process Book — <a href="https://drive.google.com/open?id=14jtGJj-15FDFDYqRRCYPMWNFJnRlUCCu" target="_blank">View</a><br>
-Kodak Subway Takeover — <a href="https://drive.google.com/open?id=19_fbaH1PyPKjrS8Ira8P7b4HnfVaBZzk" target="_blank">View</a>`,
-      contact: `Instagram — <a href="https://www.instagram.com/ledbeirut/" target="_blank">@ledbeirut</a><br>
-YouTube — <a href="https://www.youtube.com/@ledbeirut/videos" target="_blank">@ledbeirut</a><br>
-Email — <a href="mailto:luke.eldib@gmail.com">luke.eldib@gmail.com</a>`
-    };
-
-    document.addEventListener('DOMContentLoaded', () => {
-      const input = document.getElementById('terminal-input');
-      const output = document.getElementById('output');
-
-      input.addEventListener('keydown', function (e) {
-        if (e.key === 'Enter') {
-          e.preventDefault();
-          const cmd = input.textContent.trim().toLowerCase();
-          const container = document.createElement('div');
-          container.innerHTML = `<pre>> ${cmd}</pre>`;
-          const content = document.createElement('div');
-
-          if (commandOutput[cmd]) {
-            content.innerHTML = commandOutput[cmd];
-          } else if (cmd === 'yt') {
-            content.textContent = 'Opening YouTube...';
-            window.open('https://www.youtube.com/@ledbeirut/videos', '_blank');
-          } else if (cmd === 'insta' || cmd === 'ig') {
-            content.textContent = 'Opening Instagram...';
-            window.open('https://www.instagram.com/ledbeirut/', '_blank');
-          } else if (cmd === 'exit') {
-            content.textContent = 'Closing window...';
-            setTimeout(() => self.close(), 1000);
-          } else if (cmd === 'source' || cmd === 'src') {
-            content.textContent = 'Opening Github...';
-            window.open('https://github.com/LedGH/ledgh.github.io/', '_blank');
-          } else if (cmd === 'clear' || cmd === 'clr') {
-            output.innerHTML = '';
-            input.textContent = '';
-            return;
-          } else if (cmd === 'help') {
-            content.innerHTML = `<pre>
-Available commands:
-
-  whoami       Displays user information and background
-  work         Shows a selection of projects and links
-  contact      Lists contact details and social profiles
-  insta/ig     Opens my Instagram
-  yt           Opens my YouTube channel
-  source/src   Shows the source code of this site on Github
-  clear/clr    Clears the screen
-  exit         Closes the window (may not work on all browsers)
-  help         Displays this help message
-
-Type a command and press ENTER to execute.
-</pre>`;
-          } else {
-            content.textContent = 'Command not recognized.';
-          }
-
-          container.appendChild(content);
-          output.appendChild(container);
-          input.textContent = '';
-          window.scrollTo(0, document.body.scrollHeight);
-        }
-      });
-    });
-
-    const terminalInput = document.getElementById('terminal-input');
-
-    // Always focus on input
-    window.addEventListener('load', () => terminalInput.focus());
-
-    document.addEventListener('click', (e) => {
-      if (!terminalInput.contains(e.target)) {
-        e.preventDefault();
-        terminalInput.focus();
-      }
-    });
-
-    terminalInput.addEventListener('blur', () => {
-      setTimeout(() => terminalInput.focus(), 0);
-    });
-
-    // Force caret to end
-    function moveCaretToEnd(el) {
-      const range = document.createRange();
-      const sel = window.getSelection();
-      range.selectNodeContents(el);
-      range.collapse(false);
-      sel.removeAllRanges();
-      sel.addRange(range);
-    }
-
-    ['focus', 'click', 'keyup', 'mouseup'].forEach(evt => {
-      terminalInput.addEventListener(evt, () => {
-        moveCaretToEnd(terminalInput);
-      });
-    });
-
-    // Block arrow keys and Home/End
-    terminalInput.addEventListener('keydown', (e) => {
-      if (['ArrowLeft', 'ArrowUp', 'ArrowRight', 'ArrowDown', 'Home', 'PageUp', 'PageDown'].includes(e.key)) {
-        e.preventDefault();
-      }
-    });
-  </script>
-
-  <script>
     function updateResolution() {
       const res = `${window.innerWidth}x${window.innerHeight}`;
-      document.getElementById('resolution').textContent = res;
+      const el = document.getElementById('resolution');
+      if (el) el.textContent = res;
     }
     window.addEventListener('resize', updateResolution);
     window.addEventListener('load', updateResolution);
@@ -313,66 +508,65 @@ Type a command and press ENTER to execute.
       if (ua.includes("Safari/") && !ua.includes("Chrome/")) return "Safari";
       return "Unknown";
     }
+    const hostEl = document.getElementById('host');
+    if (hostEl) hostEl.textContent = detectBrowser();
 
-    document.getElementById('host').textContent = detectBrowser();
-  </script>
+    // ====== Tabs: click/touch + arrow keys ======
+    const tabs = Array.from(document.querySelectorAll('.tab[role="tab"]'));
+    const panels = new Map(tabs.map(t => [t.id, document.getElementById(t.getAttribute('aria-controls'))]));
 
-  <script>
-    // Simple mobile detection
-    document.addEventListener('DOMContentLoaded', () => {
-      const isMobile = /Mobi|Android/i.test(navigator.userAgent);
+    let activeIndex = tabs.findIndex(t => t.getAttribute('aria-selected') === 'true');
+    if (activeIndex < 0) activeIndex = 0;
 
-      if (isMobile) {
-        const overlay = document.createElement('div');
-        overlay.id = 'mobile-warning';
-        overlay.innerHTML = `
-          <div class="terminal-popup">
-<pre>
-+--------------------------------------------------------------+
-|  WARNING                                                    |
-|--------------------------------------------------------------|
-|  This terminal experience is not optimized for mobile.      |
-|  For the best experience, please visit the full portfolio:  |
-|                                                              |
-|  https://lukeeldib.dev                                      |
-|                                                              |
-|  [Tap anywhere to continue anyway]                          |
-+--------------------------------------------------------------+
-</pre>
-          </div>
-        `;
+    function setActive(index, focusTab = true) {
+      activeIndex = (index + tabs.length) % tabs.length;
 
-        document.body.appendChild(overlay);
+      tabs.forEach((tab, i) => {
+        const selected = i === activeIndex;
+        tab.setAttribute('aria-selected', String(selected));
+        tab.tabIndex = selected ? 0 : -1;
+        const panel = document.getElementById(tab.getAttribute('aria-controls'));
+        if (panel) panel.setAttribute('aria-hidden', String(!selected));
+      });
 
-        overlay.addEventListener('click', () => {
-          overlay.remove();
-        });
-      }
+      if (focusTab) tabs[activeIndex].focus();
+    }
+
+    tabs.forEach((tab, i) => {
+      tab.addEventListener('click', () => setActive(i, false));
+      tab.addEventListener('touchstart', () => setActive(i, false), { passive: true });
+
+      tab.addEventListener('keydown', (e) => {
+        const k = e.key;
+
+        if (k === 'ArrowRight') { e.preventDefault(); setActive(activeIndex + 1); }
+        if (k === 'ArrowLeft')  { e.preventDefault(); setActive(activeIndex - 1); }
+
+        // optional: up/down also rotate like a BBS menu
+        if (k === 'ArrowDown')  { e.preventDefault(); setActive(activeIndex + 1); }
+        if (k === 'ArrowUp')    { e.preventDefault(); setActive(activeIndex - 1); }
+
+        if (k === 'Enter' || k === ' ') { e.preventDefault(); setActive(i, false); }
+      });
+    });
+
+    // Global keyboard navigation (even if focus is inside a panel)
+    document.addEventListener('keydown', (e) => {
+      // Don’t hijack typing in inputs/textareas (you don't have them right now, but future-proof)
+      const tag = (e.target && e.target.tagName) ? e.target.tagName.toLowerCase() : '';
+      if (tag === 'input' || tag === 'textarea' || e.target?.isContentEditable) return;
+
+      if (e.key === 'ArrowRight') { e.preventDefault(); setActive(activeIndex + 1); }
+      if (e.key === 'ArrowLeft')  { e.preventDefault(); setActive(activeIndex - 1); }
+    });
+
+    // Thumbnail open behavior
+    document.addEventListener('click', (e) => {
+      const card = e.target.closest('.thumb');
+      if (!card) return;
+      const url = card.getAttribute('data-open');
+      if (url) window.open(url, '_blank');
     });
   </script>
-
-  <style>
-    #mobile-warning {
-      position: fixed;
-      z-index: 9999;
-      background: black;
-      color: var(--terminal-primary);
-      font-family: monospace;
-      font-size: 14px;
-      top: 0; left: 0;
-      width: 100vw;
-      height: 100vh;
-      padding: 2em;
-      box-sizing: border-box;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    #mobile-warning .terminal-popup {
-      white-space: pre-wrap;
-    }
-  </style>
-
 </body>
 </html>
