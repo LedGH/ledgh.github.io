@@ -256,6 +256,10 @@
       overflow: hidden;
     }
 
+    /* per-section grids */
+    .grid.grid-videos { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .grid.grid-images { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
     .thumb {
       border-top: 2px solid var(--w95-light);
       border-left: 2px solid var(--w95-light);
@@ -317,14 +321,14 @@
       .twoCol { grid-template-columns: 1fr; }
       .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .tab { font-size: 12pt; }
+      .grid.grid-videos { grid-template-columns: repeat(2, minmax(0, 1fr)); } /* small screen */
+      .grid.grid-images { grid-template-columns: repeat(2, minmax(0, 1fr)); } /* small screen */
     }
   </style>
 </head>
 
 <body>
   <div id="top">
-    
-
     <div class="ascii-art">
       <div class="ascii-wrapper">
 <pre>
@@ -382,11 +386,7 @@
       <section class="panel" id="panel-reel" role="tabpanel" aria-labelledby="tab-reel" aria-hidden="false">
         <div class="twoCol">
           <div class="mediaBox">
-            <!-- uses your root file -->
-            <video  controls
-                    playsinline
-                    data-focusable="true"
-                    id="reelVideo">
+            <video controls playsinline data-focusable="true" tabindex="0" id="reelVideo">
               <source src="/Reel.mp4" type="video/mp4" />
               Your browser does not support the video tag.
             </video>
@@ -404,7 +404,7 @@
 
       <!-- VIDEOS -->
       <section class="panel" id="panel-videos" role="tabpanel" aria-labelledby="tab-videos" aria-hidden="true">
-        <div class="grid">
+        <div class="grid grid-videos" data-cols="3">
           <div class="thumb" tabindex="0" data-focusable="true" data-open="https://www.youtube.com/@ledbeirut/videos">
             <img class="img" src="thumbs/video1.jpg" alt="Video thumb 1" />
             <div class="thumbLabel">Mushroom God teaser</div>
@@ -429,20 +429,12 @@
             <img class="img" src="thumbs/video6.jpg" alt="Video thumb 6" />
             <div class="thumbLabel">Another clip</div>
           </div>
-          <div class="thumb" tabindex="0" data-focusable="true" data-open="https://www.youtube.com/@ledbeirut/videos">
-            <img class="img" src="thumbs/video7.jpg" alt="Video thumb 7" />
-            <div class="thumbLabel">Another clip</div>
-          </div>
-          <div class="thumb" tabindex="0" data-focusable="true" data-open="https://www.youtube.com/@ledbeirut/videos">
-            <img class="img" src="thumbs/video8.jpg" alt="Video thumb 8" />
-            <div class="thumbLabel">Another clip</div>
-          </div>
         </div>
       </section>
 
       <!-- IMAGES -->
       <section class="panel" id="panel-images" role="tabpanel" aria-labelledby="tab-images" aria-hidden="true">
-        <div class="grid">
+        <div class="grid grid-images" data-cols="4">
           <div class="thumb" tabindex="0" data-focusable="true" data-open="images/fullsize1.jpg"><img class="img" src="images/thumb1.jpg" alt="Image 1" /><div class="thumbLabel">Biel photo essay</div></div>
           <div class="thumb" tabindex="0" data-focusable="true" data-open="images/fullsize2.jpg"><img class="img" src="images/thumb2.jpg" alt="Image 2" /><div class="thumbLabel">Street shot</div></div>
           <div class="thumb" tabindex="0" data-focusable="true" data-open="images/fullsize3.jpg"><img class="img" src="images/thumb3.jpg" alt="Image 3" /><div class="thumbLabel">Portrait</div></div>
@@ -583,7 +575,7 @@ Based in NYC.
       highlight(tabs[activeIndex]);
     }
 
-    // ===== Panel navigation: spatial arrow keys =====
+    // ===== Panel navigation helpers =====
     function getPanelFocusables(panel) {
       if (!panel) return [];
       const list = Array.from(panel.querySelectorAll('[data-focusable="true"], .thumb, .focusItem, a[href], button, [tabindex]'))
@@ -613,13 +605,11 @@ Based in NYC.
         const dx = b.x - a.x;
         const dy = b.y - a.y;
 
-        // must be in the right hemisphere for the direction
         if (dir === 'left'  && dx >= -2) continue;
         if (dir === 'right' && dx <=  2) continue;
         if (dir === 'up'    && dy >= -2) continue;
         if (dir === 'down'  && dy <=  2) continue;
 
-        // distance, with a penalty for drifting off-axis
         const dist = Math.hypot(dx, dy);
 
         let offAxis = 0;
@@ -639,11 +629,6 @@ Based in NYC.
     function firstFocusableInPanel(panel) {
       const f = getPanelFocusables(panel);
       return f.length ? f[0] : null;
-    }
-
-    function isFirstInPanel(panel, el) {
-      const f = getPanelFocusables(panel);
-      return f.length && f[0] === el;
     }
 
     function activate(el) {
@@ -699,8 +684,8 @@ Based in NYC.
         return;
       }
 
-      // special: Up on first item returns to tabs
-      if (dir === 'up' && isFirstInPanel(panel, currentPanelEl)) {
+      // NEW: "Up" from ANY item returns to the parent tab (your requested behavior)
+      if (dir === 'up') {
         returnToTabs();
         return;
       }
@@ -736,6 +721,21 @@ Based in NYC.
       tab.addEventListener('touchstart', () => setActiveTab(i, false), { passive: true });
     });
 
+    // PREVENT VIDEO FROM HIJACKING ARROW KEYS (capture)
+    document.addEventListener('keydown', (e) => {
+      const tag = e.target?.tagName?.toLowerCase();
+      const isEditable = e.target?.isContentEditable;
+      if (tag === 'input' || tag === 'textarea' || isEditable) return;
+
+      const isArrow = ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(e.key);
+      if (!isArrow) return;
+
+      if (tag === 'video') {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    }, true);
+
     // Keyboard
     document.addEventListener('keydown', (e) => {
       const tag = (e.target && e.target.tagName) ? e.target.tagName.toLowerCase() : '';
@@ -751,7 +751,7 @@ Based in NYC.
         // panel mode
         if (e.key === 'Escape') { e.preventDefault(); returnToTabs(); return; }
 
-        // shift+left/right switches tabs (so normal left/right can navigate inside panels)
+        // shift+left/right switches tabs (optional)
         if (e.shiftKey && e.key === 'ArrowRight') { e.preventDefault(); setActiveTab(activeIndex + 1, true); return; }
         if (e.shiftKey && e.key === 'ArrowLeft')  { e.preventDefault(); setActiveTab(activeIndex - 1, true); return; }
 
@@ -770,34 +770,26 @@ Based in NYC.
     // init
     setActiveTab(activeIndex, false);
 
+    // ===== Reel looping: loop only if user didn't manually pause =====
     const reel = document.getElementById('reelVideo');
+    if (reel) {
+      let userPaused = false;
 
-if (reel) {
-  let userPaused = false;
+      reel.addEventListener('pause', () => {
+        if (!reel.ended) userPaused = true;
+      });
 
-  // When user explicitly pauses
-  reel.addEventListener('pause', () => {
-    // Ignore pauses caused by ending
-    if (!reel.ended) {
-      userPaused = true;
+      reel.addEventListener('play', () => {
+        userPaused = false;
+      });
+
+      reel.addEventListener('ended', () => {
+        if (!userPaused) {
+          reel.currentTime = 0;
+          reel.play();
+        }
+      });
     }
-  });
-
-  // When user plays again
-  reel.addEventListener('play', () => {
-    userPaused = false;
-  });
-
-  // Loop ONLY if user didn't pause manually
-  reel.addEventListener('ended', () => {
-    if (!userPaused) {
-      reel.currentTime = 0;
-      reel.play();
-    }
-  });
-}
-
   </script>
-  
 </body>
 </html>
