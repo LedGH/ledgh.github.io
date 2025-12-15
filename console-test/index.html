@@ -33,11 +33,19 @@
       font-family: 'Courier New', Courier, monospace;
       font-size: 18pt;
       padding: 15px;
-      white-space: pre-wrap;
       box-sizing: border-box;
+
+      /* IMPORTANT: do NOT pre-wrap the whole page */
+      white-space: normal;
 
       display: flex;
       flex-direction: column;
+    }
+
+    /* only pre blocks keep monospace formatting */
+    pre {
+      margin: 0;
+      white-space: pre;
     }
 
     a {
@@ -94,11 +102,16 @@
       margin-bottom: 4px;
     }
 
-    .ascii-wrapper { display: inline-block; white-space: nowrap; }
-    .ascii-wrapper pre { line-height: 1.05; margin: 0; }
+    .ascii-wrapper {
+      display: inline-block;
+      white-space: nowrap;
+    }
+    .ascii-wrapper pre {
+      line-height: 1.05;
+    }
 
     .neofetch { text-align: left; max-width: 520px; }
-    .neofetch pre { margin: 0; line-height: 1.15; }
+    .neofetch pre { line-height: 1.15; }
 
     /* ===== WIN95-ISH FRAME ===== */
     .frame {
@@ -155,12 +168,10 @@
       overflow: hidden;
       text-overflow: ellipsis;
 
-      /* separators instead of gaps */
       border-right: 1px solid var(--w95-dark);
     }
     .tab:last-child { border-right: none; }
 
-    /* "selected tab" look */
     .tab[aria-selected="true"] {
       background: rgba(255, 51, 51, 0.12);
     }
@@ -190,18 +201,21 @@
       overflow: hidden;
       flex-direction: column;
       min-height: 0;
+      margin: 0;
+      padding: 0;
     }
     .panel[aria-hidden="false"] { display: flex; }
 
+    /* (You wanted H3 rec included) */
     .panelTitle {
       margin: 0;
       padding: 0 0 8px 0;
       font-size: 14pt;
       color: var(--terminal-accent);
       flex: 0 0 auto;
+      line-height: 1.1;
     }
 
-    /* Layouts */
     .twoCol, .grid {
       flex: 1;
       min-height: 0;
@@ -255,7 +269,6 @@
       gap: 10px;
     }
 
-    /* Focusable tiles */
     .thumb {
       border-top: 2px solid var(--w95-light);
       border-left: 2px solid var(--w95-light);
@@ -271,8 +284,6 @@
       grid-template-rows: 1fr auto;
       gap: 6px;
       min-height: 0;
-
-      /* make it keyboard-focusable looking */
       outline: none;
     }
 
@@ -292,7 +303,7 @@
       text-overflow: ellipsis;
     }
 
-    /* ===== The actual "highlight" (inverted) ===== */
+    /* ===== Highlight inversion ===== */
     .is-highlight {
       background: var(--focus-bg) !important;
       color: var(--focus-fg) !important;
@@ -305,19 +316,18 @@
       color: var(--focus-fg) !important;
     }
 
-    /* Make focus not rely on browser outline */
     .tab:focus-visible,
     .thumb:focus-visible,
     .focusItem:focus-visible {
       outline: none;
     }
 
-    /* "focusable list item" style */
     .focusItem {
       display: inline-block;
       padding: 2px 4px;
       border-radius: 2px;
       outline: none;
+      white-space: nowrap;
     }
 
     @media (max-width: 900px) {
@@ -485,7 +495,7 @@
       <section class="panel" id="panel-about" role="tabpanel" aria-labelledby="tab-about" aria-hidden="true">
         <h3 class="panelTitle">About</h3>
         <div class="listBox">
-<pre style="margin:0; font-size: 14pt; line-height: 1.35; white-space: pre-wrap;">
+<pre style="font-size: 14pt; line-height: 1.35; white-space: pre-wrap;">
 Luke El Dib — designer / developer / builder.
 
 I like making work that feels engineered, not just decorated:
@@ -544,10 +554,7 @@ Based in NYC.
       const hours = Math.floor((totalSeconds % 86400) / 3600);
       const minutes = Math.floor((totalSeconds % 3600) / 60);
       const seconds = totalSeconds % 60;
-
-      // show years as a human number too (approx using 365.2425)
       const years = (days / 365.2425).toFixed(6);
-
       return `${years}y  (${days}d ${pad2(hours)}:${pad2(minutes)}:${pad2(seconds)})`;
     }
 
@@ -565,7 +572,6 @@ Based in NYC.
     let activeIndex = tabs.findIndex(t => t.getAttribute('aria-selected') === 'true');
     if (activeIndex < 0) activeIndex = 0;
 
-    // highlight management
     function clearHighlights() {
       document.querySelectorAll('.is-highlight').forEach(el => el.classList.remove('is-highlight'));
     }
@@ -582,21 +588,16 @@ Based in NYC.
 
     function getPanelFocusables(panel) {
       if (!panel) return [];
-      // Focusables = anything explicitly marked + standard interactive elements
       const list = Array.from(panel.querySelectorAll('[data-focusable="true"], a[href], button, input, select, textarea, [tabindex]'))
         .filter(el => {
-          // ignore -1 tabindex and hidden panels
           const ti = el.getAttribute('tabindex');
           if (ti === '-1') return false;
-          if (el.offsetParent === null && el.tagName !== 'VIDEO') return false; // basic visibility
+          if (el.offsetParent === null && el.tagName !== 'VIDEO') return false;
           return true;
         });
-
-      // de-dupe (rare but can happen)
       return Array.from(new Set(list));
     }
 
-    // state: are we in the tab strip or inside panel content?
     let mode = 'tabs'; // 'tabs' | 'panel'
     let panelFocusIndex = 0;
 
@@ -612,22 +613,12 @@ Based in NYC.
         if (panel) panel.setAttribute('aria-hidden', String(!selected));
       });
 
-      if (focusTab) tabs[activeIndex].focus();
       mode = 'tabs';
       panelFocusIndex = 0;
 
-      // highlight the active tab
+      if (focusTab) tabs[activeIndex].focus();
       highlight(tabs[activeIndex]);
     }
-
-    // Initial highlight
-    highlight(tabs[activeIndex]);
-
-    // Click tabs
-    tabs.forEach((tab, i) => {
-      tab.addEventListener('click', () => setActiveTab(i, true));
-      tab.addEventListener('touchstart', () => setActiveTab(i, true), { passive: true });
-    });
 
     function enterPanelFocus() {
       const panel = getActivePanel();
@@ -660,40 +651,27 @@ Based in NYC.
       highlight(tabs[activeIndex]);
     }
 
-    // Activate the highlighted item
     function activateHighlighted() {
       const el = document.querySelector('.is-highlight');
       if (!el) return;
 
-      // If it's a thumb or a focusItem with data-open, open it
       const open = el.getAttribute('data-open');
       if (open && open !== '#') {
-        if (open.startsWith('mailto:')) {
-          window.location.href = open;
-        } else {
-          window.open(open, '_blank');
-        }
+        if (open.startsWith('mailto:')) window.location.href = open;
+        else window.open(open, '_blank');
         return;
       }
 
-      // If it's a normal link
-      if (el.tagName === 'A' && el.href) {
-        el.click();
-        return;
-      }
+      if (el.tagName === 'A' && el.href) { el.click(); return; }
 
-      // If it's a video, toggle play
       if (el.tagName === 'VIDEO') {
-        if (el.paused) el.play();
-        else el.pause();
+        if (el.paused) el.play(); else el.pause();
         return;
       }
 
-      // Otherwise click it
       el.click?.();
     }
 
-    // Global keyboard navigation
     document.addEventListener('keydown', (e) => {
       const tag = (e.target && e.target.tagName) ? e.target.tagName.toLowerCase() : '';
       const isTyping = (tag === 'input' || tag === 'textarea' || e.target?.isContentEditable);
@@ -708,7 +686,6 @@ Based in NYC.
         if (e.key === 'ArrowDown')  { e.preventDefault(); stepPanelFocus(1); }
         if (e.key === 'ArrowUp')    {
           e.preventDefault();
-          // if you're at the first focusable, go back to tabs
           if (panelFocusIndex === 0) returnToTabs();
           else stepPanelFocus(-1);
         }
@@ -719,25 +696,21 @@ Based in NYC.
       }
     });
 
-    // Clicking a focusable inside a panel should highlight it
     document.addEventListener('click', (e) => {
       const focusable = e.target.closest('[data-focusable="true"], .thumb, .focusItem, a[href], button');
       if (!focusable) return;
-
-      // if you click a tab, don't switch mode to panel
       if (focusable.classList.contains('tab')) return;
 
       mode = 'panel';
       highlight(focusable);
 
-      // if it's a thumb, open it
       const open = focusable.getAttribute('data-open');
       if (focusable.classList.contains('thumb') && open) {
         window.open(open, '_blank');
       }
     });
 
-    // start correct tab state
+    // init
     setActiveTab(activeIndex, false);
   </script>
 </body>
