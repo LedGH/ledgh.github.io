@@ -266,49 +266,6 @@
       white-space: nowrap;
     }
 
-    .videoProxy{
-  width: 100%;
-  height: 100%;
-  outline: none;
-}
-.videoProxy video{
-  width: 100%;
-  height: 100%;
-  display: block;
-  background: #000;
-}
-
-
-    /* Make the videos panel grid always be exactly 3x2 and fit the available height */
-#panel-videos .grid.grid-videos{
-  height: 100%;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  grid-template-rows: repeat(2, minmax(0, 1fr));
-  gap: 8px;            /* shrink a little */
-}
-
-/* Shrink the thumb chrome a bit */
-#panel-videos .thumb{
-  padding: 4px;
-  gap: 6px;
-}
-
-/* Give the thumbnail image a consistent 16:9 media area */
-#panel-videos .thumb .img{
-  width: 100%;
-  height: auto;
-  aspect-ratio: 16 / 9;
-  object-fit: cover;
-  object-position: center;
-  display: block;
-}
-
-/* Slightly smaller label so row heights don’t drift */
-#panel-videos .thumbLabel{
-  font-size: 11pt;
-}
-
-
     @media (max-width: 900px) {
       body { font-size: 14pt; }
       .ascii-art { gap: 24px; }
@@ -317,51 +274,6 @@
       .grid.grid-videos { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .grid.grid-images { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
-
-  #ytOverlay{
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,.85);
-  display: none;
-  align-items: center;
-  justify-content: center;
-  z-index: 999999;
-}
-#ytOverlay[aria-hidden="false"]{ display: flex; }
-
-#ytModal{
-  width: min(1200px, 92vw);
-  border-top: 3px solid var(--w95-light);
-  border-left: 3px solid var(--w95-light);
-  border-right: 3px solid var(--w95-dark);
-  border-bottom: 3px solid var(--w95-dark);
-  box-shadow: inset 2px 2px 0 var(--w95-mid), inset -2px -2px 0 var(--w95-black);
-  background: #000;
-  padding: 10px;
-}
-
-#ytTitle{
-  color: var(--terminal-accent);
-  font-weight: 800;
-  font-size: 14pt;
-  margin-bottom: 8px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.ytFrameWrap{
-  width: 100%;
-  aspect-ratio: 16/9;
-  background: #000;
-}
-#ytFrame{
-  width: 100%;
-  height: 100%;
-  border: 0;
-  display: block;
-}
-
   </style>
 </head>
 
@@ -424,13 +336,12 @@
       <section class="panel" id="panel-reel" role="tabpanel" aria-labelledby="tab-reel" aria-hidden="false">
         <div class="twoCol">
           <div class="mediaBox">
-  <div class="videoProxy" tabindex="0" data-focusable="true" data-video="reelVideo" aria-label="Play reel">
-    <video controls playsinline tabindex="-1" id="reelVideo">
-      <source src="/Reel.mp4" type="video/mp4" />
-    </video>
-  </div>
-</div>
-
+            <!-- IMPORTANT: keep this focusable for highlight, but we will STOP it from trapping arrows -->
+            <video controls playsinline data-focusable="true" tabindex="0" id="reelVideo">
+              <source src="/Reel.mp4" type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+          </div>
           <div class="listBox">
             <ul class="bbsList">
               <li><span class="bbsMeta">SYS:</span> Tabs: ←/→ then ↓. Panel: arrows move highlight. Enter activates. Esc returns.</li>
@@ -534,20 +445,6 @@ I am trilingual in English, Arabic and French and am looking to gain meaningful 
     </div>
   </div>
 
-<div id="ytOverlay" aria-hidden="true">
-  <div id="ytModal">
-    <div id="ytTitle"></div>
-    <div class="ytFrameWrap">
-      <iframe id="ytFrame"
-        allow="autoplay; encrypted-media; picture-in-picture"
-        allowfullscreen
-        referrerpolicy="strict-origin-when-cross-origin"></iframe>
-    </div>
-    <div style="margin-top:8px; font-size:12pt; opacity:.8;">Esc to close</div>
-  </div>
-</div>
-
-  
   <script>
     // ===== Resolution + Browser =====
     function updateResolution() {
@@ -689,32 +586,28 @@ I am trilingual in English, Arabic and French and am looking to gain meaningful 
       return !!panel.querySelector('.grid');
     }
 
-function activate(el) {
-  if (!el) return;
+    function activate(el) {
+      if (!el) return;
 
-  // YouTube overlay case (added below)
-  const ytid = el.getAttribute('data-ytid');
-  if (ytid) { openYT(ytid, el.querySelector('.thumbLabel')?.textContent || ''); return; }
+      const open = el.getAttribute('data-open');
+      if (open && open !== '#') {
+        if (open.startsWith('mailto:')) window.location.href = open;
+        else window.open(open, '_blank');
+        return;
+      }
 
-  const open = el.getAttribute('data-open');
-  if (open && open !== '#') {
-    if (open.startsWith('mailto:')) window.location.href = open;
-    else window.open(open, '_blank');
-    return;
-  }
+      if (el.tagName === 'A' && el.href) { el.click(); return; }
 
-  // Reel proxy: toggle the real video without focusing it
-  const vidId = el.getAttribute('data-video');
-  if (vidId) {
-    const v = document.getElementById(vidId);
-    if (v) { if (v.paused) v.play(); else v.pause(); }
-    return;
-  }
+      if (el.tagName === 'VIDEO') {
+        // toggle play/pause, then immediately blur so arrows don't get trapped by native controls
+        if (el.paused) el.play(); else el.pause();
+        try { el.blur(); } catch(_) {}
+        // keep our highlight "selected" but remove real DOM focus from the video
+        return;
+      }
 
-  if (el.tagName === 'A' && el.href) { el.click(); return; }
-  el.click?.();
-}
-
+      el.click?.();
+    }
 
     let mode = 'tabs';
     let currentPanelEl = null;
@@ -786,7 +679,10 @@ function moveInPanel(dir) {
       currentPanelEl = focusable;
       highlight(focusable);
 
-     focusable.classList.contains('thumb'
+      if (focusable.classList.contains('thumb')) {
+        const url = focusable.getAttribute('data-open');
+        if (url) window.open(url, '_blank');
+      }
     });
 
     // Tabs click
@@ -912,10 +808,8 @@ async function fetchChannelUploads(channelId, max = 6) {
 
 function setVideoThumb(el, video) {
   el.setAttribute("data-open", `https://www.youtube.com/watch?v=${video.id}`);
-  el.setAttribute("data-ytid", video.id);
   const img = el.querySelector("img.img");
   const label = el.querySelector(".thumbLabel");
-  
   if (img && video.thumb) img.src = video.thumb;
   if (label) label.textContent = video.title;
 }
@@ -956,40 +850,6 @@ async function hydrateVideosFromAPI() {
 }
 
 document.addEventListener("DOMContentLoaded", hydrateVideosFromAPI);
-
-    let lastFocusBeforeOverlay = null;
-
-function openYT(videoId, title='') {
-  lastFocusBeforeOverlay = currentPanelEl || document.activeElement;
-
-  const overlay = document.getElementById('ytOverlay');
-  const frame = document.getElementById('ytFrame');
-  const titleEl = document.getElementById('ytTitle');
-
-  titleEl.textContent = title || 'Video';
-  overlay.setAttribute('aria-hidden', 'false');
-
-  frame.src = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1`;
-}
-
-function closeYT() {
-  const overlay = document.getElementById('ytOverlay');
-  const frame = document.getElementById('ytFrame');
-
-  overlay.setAttribute('aria-hidden', 'true');
-  frame.src = '';
-
-  try { lastFocusBeforeOverlay?.focus?.(); } catch(_) {}
-}
-
-document.addEventListener('keydown', (e) => {
-  const overlay = document.getElementById('ytOverlay');
-  if (overlay?.getAttribute('aria-hidden') === 'false' && e.key === 'Escape') {
-    e.preventDefault();
-    closeYT();
-  }
-});
-
   </script>
 </body>
 </html>
