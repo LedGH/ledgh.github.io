@@ -199,33 +199,18 @@
       height: 100%;
       display: none;
       overflow: hidden;
-      flex-direction: column;
       min-height: 0;
       margin: 0;
       padding: 0;
     }
-    .panel[aria-hidden="false"] { display: flex; }
-
-    /* (You wanted H3 rec included) */
-    .panelTitle {
-      margin: 0;
-      padding: 0 0 8px 0;
-      font-size: 14pt;
-      color: var(--terminal-accent);
-      flex: 0 0 auto;
-      line-height: 1.1;
-    }
-
-    .twoCol, .grid {
-      flex: 1;
-      min-height: 0;
-      overflow: hidden;
-    }
+    .panel[aria-hidden="false"] { display: block; }
 
     .twoCol {
+      height: 100%;
       display: grid;
       grid-template-columns: 1.2fr 0.8fr;
       gap: 12px;
+      overflow: hidden;
     }
 
     .mediaBox, .listBox {
@@ -264,9 +249,11 @@
     .bbsMeta { color: rgba(255,51,51,0.65); }
 
     .grid {
+      height: 100%;
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 10px;
+      overflow: hidden;
     }
 
     .thumb {
@@ -314,12 +301,6 @@
     }
     .is-highlight .thumbLabel {
       color: var(--focus-fg) !important;
-    }
-
-    .tab:focus-visible,
-    .thumb:focus-visible,
-    .focusItem:focus-visible {
-      outline: none;
     }
 
     .focusItem {
@@ -371,7 +352,7 @@
 <span style="color:var(--terminal-primary)">guest@lukeeldib.dev</span>
 -------------------
 
-<span style="color:var(--terminal-accent)">OS:</span> PortfoliOS v2.4 (BBS build)
+<span style="color:var(--terminal-accent)">OS:</span> PortfoliOS v2.5 (BBS build)
 <span style="color:var(--terminal-accent)">Host:</span> <span id="host">Detecting...</span>
 <span style="color:var(--terminal-accent)">Kernel:</span> 6.9.42-dib
 <span style="color:var(--terminal-accent)">Uptime:</span> <span id="uptime">Loading...</span>
@@ -398,9 +379,9 @@
     <div class="panelShell">
       <!-- REEL -->
       <section class="panel" id="panel-reel" role="tabpanel" aria-labelledby="tab-reel" aria-hidden="false">
-        <h3 class="panelTitle">Featured Reel</h3>
         <div class="twoCol">
           <div class="mediaBox">
+            <!-- uses your root file -->
             <video controls playsinline data-focusable="true">
               <source src="Reel.mp4" type="video/mp4" />
               Your browser does not support the video tag.
@@ -408,10 +389,9 @@
           </div>
           <div class="listBox">
             <ul class="bbsList">
-              <li><span class="bbsMeta">SYS:</span> ←/→ tabs, ↓ into panel, ↑ back to tabs.</li>
-              <li><span class="bbsMeta">NOTE:</span> Enter activates highlighted item.</li>
-              <li><span class="focusItem" tabindex="0" data-focusable="true" data-open="#">Reel: download (coming soon)</span></li>
-              <li><span class="focusItem" tabindex="0" data-focusable="true" data-open="https://www.youtube.com/@ledbeirut/videos">Go to YouTube</span></li>
+              <li><span class="bbsMeta">SYS:</span> Tabs: ←/→ then ↓. Panel: arrows move highlight. Enter activates. Esc returns.</li>
+              <li><span class="focusItem" tabindex="0" data-focusable="true" data-open="https://www.youtube.com/@ledbeirut/videos">YouTube</span></li>
+              <li><span class="focusItem" tabindex="0" data-focusable="true" data-open="mailto:luke.eldib@gmail.com">Email me</span></li>
               <li>Selected work: motion / photo / design</li>
             </ul>
           </div>
@@ -420,7 +400,6 @@
 
       <!-- VIDEOS -->
       <section class="panel" id="panel-videos" role="tabpanel" aria-labelledby="tab-videos" aria-hidden="true">
-        <h3 class="panelTitle">Videos</h3>
         <div class="grid">
           <div class="thumb" tabindex="0" data-focusable="true" data-open="https://www.youtube.com/@ledbeirut/videos">
             <img class="img" src="thumbs/video1.jpg" alt="Video thumb 1" />
@@ -459,7 +438,6 @@
 
       <!-- IMAGES -->
       <section class="panel" id="panel-images" role="tabpanel" aria-labelledby="tab-images" aria-hidden="true">
-        <h3 class="panelTitle">Images</h3>
         <div class="grid">
           <div class="thumb" tabindex="0" data-focusable="true" data-open="images/fullsize1.jpg"><img class="img" src="images/thumb1.jpg" alt="Image 1" /><div class="thumbLabel">Biel photo essay</div></div>
           <div class="thumb" tabindex="0" data-focusable="true" data-open="images/fullsize2.jpg"><img class="img" src="images/thumb2.jpg" alt="Image 2" /><div class="thumbLabel">Street shot</div></div>
@@ -474,7 +452,6 @@
 
       <!-- DESIGN -->
       <section class="panel" id="panel-design" role="tabpanel" aria-labelledby="tab-design" aria-hidden="true">
-        <h3 class="panelTitle">Design</h3>
         <div class="twoCol">
           <div class="listBox">
             <ul class="bbsList">
@@ -482,7 +459,6 @@
               <li><span class="focusItem" tabindex="0" data-focusable="true" data-open="https://drive.google.com/open?id=19_fbaH1PyPKjrS8Ira8P7b4HnfVaBZzk">Kodak Subway Takeover — View</span></li>
               <li><span class="focusItem" tabindex="0" data-focusable="true" data-open="https://docs.google.com/presentation/d/14gSRhUhZukIYc09eZKIAvVAPLt3We_jP">Daft Punk Cover — View</span></li>
               <li><span class="focusItem" tabindex="0" data-focusable="true" data-open="https://drive.google.com/open?id=14jtGJj-15FDFDYqRRCYPMWNFJnRlUCCu">Process Book — View</span></li>
-              <li><span class="bbsMeta">TIP:</span> keep 6–10 items max.</li>
             </ul>
           </div>
           <div class="mediaBox">
@@ -493,8 +469,7 @@
 
       <!-- ABOUT -->
       <section class="panel" id="panel-about" role="tabpanel" aria-labelledby="tab-about" aria-hidden="true">
-        <h3 class="panelTitle">About</h3>
-        <div class="listBox">
+        <div class="listBox" style="height: 100%;">
 <pre style="font-size: 14pt; line-height: 1.35; white-space: pre-wrap;">
 Luke El Dib — designer / developer / builder.
 
@@ -509,8 +484,7 @@ Based in NYC.
 
       <!-- CONTACT -->
       <section class="panel" id="panel-contact" role="tabpanel" aria-labelledby="tab-contact" aria-hidden="true">
-        <h3 class="panelTitle">Contact</h3>
-        <div class="listBox">
+        <div class="listBox" style="height: 100%;">
           <ul class="bbsList">
             <li><span class="focusItem" tabindex="0" data-focusable="true" data-open="mailto:luke.eldib@gmail.com">Email — luke.eldib@gmail.com</span></li>
             <li><span class="focusItem" tabindex="0" data-focusable="true" data-open="https://www.instagram.com/ledbeirut/">Instagram — @ledbeirut</span></li>
@@ -567,7 +541,7 @@ Based in NYC.
     updateUptime();
     setInterval(updateUptime, 1000);
 
-    // ===== Tabs + "focus inside panel" nav =====
+    // ===== Tabs + highlight =====
     const tabs = Array.from(document.querySelectorAll('.tab[role="tab"]'));
     let activeIndex = tabs.findIndex(t => t.getAttribute('aria-selected') === 'true');
     if (activeIndex < 0) activeIndex = 0;
@@ -586,21 +560,6 @@ Based in NYC.
       return document.getElementById(tab.getAttribute('aria-controls'));
     }
 
-    function getPanelFocusables(panel) {
-      if (!panel) return [];
-      const list = Array.from(panel.querySelectorAll('[data-focusable="true"], a[href], button, input, select, textarea, [tabindex]'))
-        .filter(el => {
-          const ti = el.getAttribute('tabindex');
-          if (ti === '-1') return false;
-          if (el.offsetParent === null && el.tagName !== 'VIDEO') return false;
-          return true;
-        });
-      return Array.from(new Set(list));
-    }
-
-    let mode = 'tabs'; // 'tabs' | 'panel'
-    let panelFocusIndex = 0;
-
     function setActiveTab(index, focusTab = true) {
       activeIndex = (index + tabs.length) % tabs.length;
 
@@ -614,45 +573,76 @@ Based in NYC.
       });
 
       mode = 'tabs';
-      panelFocusIndex = 0;
+      currentPanelEl = null;
 
       if (focusTab) tabs[activeIndex].focus();
       highlight(tabs[activeIndex]);
     }
 
-    function enterPanelFocus() {
-      const panel = getActivePanel();
-      const focusables = getPanelFocusables(panel);
-      if (!focusables.length) return;
-
-      mode = 'panel';
-      panelFocusIndex = Math.max(0, Math.min(panelFocusIndex, focusables.length - 1));
-
-      const el = focusables[panelFocusIndex];
-      el.focus?.();
-      highlight(el);
+    // ===== Panel navigation: spatial arrow keys =====
+    function getPanelFocusables(panel) {
+      if (!panel) return [];
+      const list = Array.from(panel.querySelectorAll('[data-focusable="true"], .thumb, .focusItem, a[href], button, [tabindex]'))
+        .filter(el => {
+          const ti = el.getAttribute('tabindex');
+          if (ti === '-1') return false;
+          if (el.offsetParent === null && el.tagName !== 'VIDEO') return false;
+          return true;
+        });
+      return Array.from(new Set(list));
     }
 
-    function stepPanelFocus(delta) {
-      const panel = getActivePanel();
-      const focusables = getPanelFocusables(panel);
-      if (!focusables.length) return;
-
-      panelFocusIndex = (panelFocusIndex + delta + focusables.length) % focusables.length;
-      const el = focusables[panelFocusIndex];
-      el.focus?.();
-      highlight(el);
+    function centerOf(el) {
+      const r = el.getBoundingClientRect();
+      return { x: r.left + r.width / 2, y: r.top + r.height / 2, r };
     }
 
-    function returnToTabs() {
-      mode = 'tabs';
-      panelFocusIndex = 0;
-      tabs[activeIndex].focus();
-      highlight(tabs[activeIndex]);
+    function bestCandidateInDirection(fromEl, candidates, dir) {
+      const a = centerOf(fromEl);
+      let best = null;
+      let bestScore = Infinity;
+
+      for (const c of candidates) {
+        if (c === fromEl) continue;
+        const b = centerOf(c);
+
+        const dx = b.x - a.x;
+        const dy = b.y - a.y;
+
+        // must be in the right hemisphere for the direction
+        if (dir === 'left'  && dx >= -2) continue;
+        if (dir === 'right' && dx <=  2) continue;
+        if (dir === 'up'    && dy >= -2) continue;
+        if (dir === 'down'  && dy <=  2) continue;
+
+        // distance, with a penalty for drifting off-axis
+        const dist = Math.hypot(dx, dy);
+
+        let offAxis = 0;
+        if (dir === 'left' || dir === 'right') offAxis = Math.abs(dy) * 1.35;
+        if (dir === 'up'   || dir === 'down')  offAxis = Math.abs(dx) * 1.35;
+
+        const score = dist + offAxis;
+
+        if (score < bestScore) {
+          bestScore = score;
+          best = c;
+        }
+      }
+      return best;
     }
 
-    function activateHighlighted() {
-      const el = document.querySelector('.is-highlight');
+    function firstFocusableInPanel(panel) {
+      const f = getPanelFocusables(panel);
+      return f.length ? f[0] : null;
+    }
+
+    function isFirstInPanel(panel, el) {
+      const f = getPanelFocusables(panel);
+      return f.length && f[0] === el;
+    }
+
+    function activate(el) {
       if (!el) return;
 
       const open = el.getAttribute('data-open');
@@ -672,6 +662,77 @@ Based in NYC.
       el.click?.();
     }
 
+    let mode = 'tabs';        // 'tabs' | 'panel'
+    let currentPanelEl = null;
+
+    function enterPanelFocus() {
+      const panel = getActivePanel();
+      const first = firstFocusableInPanel(panel);
+      if (!first) return;
+
+      mode = 'panel';
+      currentPanelEl = first;
+      first.focus?.();
+      highlight(first);
+    }
+
+    function returnToTabs() {
+      mode = 'tabs';
+      currentPanelEl = null;
+      tabs[activeIndex].focus();
+      highlight(tabs[activeIndex]);
+    }
+
+    function moveInPanel(dir) {
+      const panel = getActivePanel();
+      const focusables = getPanelFocusables(panel);
+      if (!focusables.length) return;
+
+      if (!currentPanelEl || !panel.contains(currentPanelEl)) {
+        currentPanelEl = focusables[0];
+        currentPanelEl.focus?.();
+        highlight(currentPanelEl);
+        return;
+      }
+
+      // special: Up on first item returns to tabs
+      if (dir === 'up' && isFirstInPanel(panel, currentPanelEl)) {
+        returnToTabs();
+        return;
+      }
+
+      const next = bestCandidateInDirection(currentPanelEl, focusables, dir);
+      if (next) {
+        currentPanelEl = next;
+        next.focus?.();
+        highlight(next);
+      }
+    }
+
+    // Click/touch: highlight + (for thumbs) open
+    document.addEventListener('click', (e) => {
+      const focusable = e.target.closest('[data-focusable="true"], .thumb, .focusItem, a[href], button');
+      if (!focusable) return;
+
+      if (focusable.classList.contains('tab')) return;
+
+      mode = 'panel';
+      currentPanelEl = focusable;
+      highlight(focusable);
+
+      if (focusable.classList.contains('thumb')) {
+        const url = focusable.getAttribute('data-open');
+        if (url) window.open(url, '_blank');
+      }
+    });
+
+    // Tabs click
+    tabs.forEach((tab, i) => {
+      tab.addEventListener('click', () => setActiveTab(i, false));
+      tab.addEventListener('touchstart', () => setActiveTab(i, false), { passive: true });
+    });
+
+    // Keyboard
     document.addEventListener('keydown', (e) => {
       const tag = (e.target && e.target.tagName) ? e.target.tagName.toLowerCase() : '';
       const isTyping = (tag === 'input' || tag === 'textarea' || e.target?.isContentEditable);
@@ -682,31 +743,23 @@ Based in NYC.
         if (e.key === 'ArrowLeft')  { e.preventDefault(); setActiveTab(activeIndex - 1, true); }
         if (e.key === 'ArrowDown')  { e.preventDefault(); enterPanelFocus(); }
         if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); enterPanelFocus(); }
-      } else if (mode === 'panel') {
-        if (e.key === 'ArrowDown')  { e.preventDefault(); stepPanelFocus(1); }
-        if (e.key === 'ArrowUp')    {
+      } else {
+        // panel mode
+        if (e.key === 'Escape') { e.preventDefault(); returnToTabs(); return; }
+
+        // shift+left/right switches tabs (so normal left/right can navigate inside panels)
+        if (e.shiftKey && e.key === 'ArrowRight') { e.preventDefault(); setActiveTab(activeIndex + 1, true); return; }
+        if (e.shiftKey && e.key === 'ArrowLeft')  { e.preventDefault(); setActiveTab(activeIndex - 1, true); return; }
+
+        if (e.key === 'ArrowRight') { e.preventDefault(); moveInPanel('right'); }
+        if (e.key === 'ArrowLeft')  { e.preventDefault(); moveInPanel('left'); }
+        if (e.key === 'ArrowDown')  { e.preventDefault(); moveInPanel('down'); }
+        if (e.key === 'ArrowUp')    { e.preventDefault(); moveInPanel('up'); }
+
+        if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
-          if (panelFocusIndex === 0) returnToTabs();
-          else stepPanelFocus(-1);
+          activate(currentPanelEl);
         }
-        if (e.key === 'ArrowRight') { e.preventDefault(); setActiveTab(activeIndex + 1, true); }
-        if (e.key === 'ArrowLeft')  { e.preventDefault(); setActiveTab(activeIndex - 1, true); }
-        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); activateHighlighted(); }
-        if (e.key === 'Escape') { e.preventDefault(); returnToTabs(); }
-      }
-    });
-
-    document.addEventListener('click', (e) => {
-      const focusable = e.target.closest('[data-focusable="true"], .thumb, .focusItem, a[href], button');
-      if (!focusable) return;
-      if (focusable.classList.contains('tab')) return;
-
-      mode = 'panel';
-      highlight(focusable);
-
-      const open = focusable.getAttribute('data-open');
-      if (focusable.classList.contains('thumb') && open) {
-        window.open(open, '_blank');
       }
     });
 
