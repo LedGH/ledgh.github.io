@@ -56,11 +56,19 @@
                     <!-- Introductory text -->
                     <p style="text-align: center;">For a more complete overview, <a href="https://drive.google.com/drive/folders/14eXnu7nb4BhoxxVr0fQZOpU5mirmFVpn?usp=drive_link" target="_blank">click here.</a></p>
 
+                              <div class="mediaBox">
+            <!-- IMPORTANT: keep this focusable for highlight, but we will STOP it from trapping arrows -->
+            <video controls playsinline data-focusable="true" tabindex="0" id="reelVideo">
+              <source src="/media/videos/Reel.mp4" type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+          </div>
+
                     <!-- Videos -->
 <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 gx-4 gy-4"
      id="youtube-video-grid" aria-live="polite"></div>
      
-<br style="margin-bottom: 40px;">
+<div style="margin-bottom: 40px;"></div>
 
                                     <div class="row mb-4">
                         <behold-widget feed-id="pUkwiZi9h1TzmtPD5BiB"></behold-widget>
