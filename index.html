@@ -23,6 +23,11 @@
             a:active {
               color: #ce2029;
             }
+            input[type=text] {
+              border-radius: 8px;
+              border: none;
+              border-bottom: 1px solid red;
+            }
         </style>
     </head>
 
@@ -45,11 +50,28 @@
 
 
               <section>
+                  
                 <div class="container">
                     <h1 class="top_text">Work</h1>
                     <!-- Introductory text -->
                     <p style="text-align: center;">For a more complete overview, <a href="https://drive.google.com/drive/folders/14eXnu7nb4BhoxxVr0fQZOpU5mirmFVpn?usp=drive_link" target="_blank">click here.</a></p>
-            
+
+                    <!-- Videos -->
+<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 gx-4 gy-4"
+     id="youtube-video-grid" aria-live="polite"></div>
+
+                                    <div class="row mb-4">
+                        <behold-widget feed-id="pUkwiZi9h1TzmtPD5BiB"></behold-widget>
+<script style="margin-bottom: 40px;">
+  (() => {
+    const d=document,s=d.createElement("script");s.type="module";
+    s.src="https://w.behold.so/widget.js";d.head.append(s);
+  })();
+</script>
+                    </div>
+
+
+                    
                     <div class="row">
                         <!-- Portfolio Item 1 -->
                         <div class="col-sm-4 portfolio-item">
@@ -156,18 +178,8 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row mb-4">
-                        <behold-widget feed-id="pUkwiZi9h1TzmtPD5BiB"></behold-widget>
-<script>
-  (() => {
-    const d=document,s=d.createElement("script");s.type="module";
-    s.src="https://w.behold.so/widget.js";d.head.append(s);
-  })();
-</script>
-                    </div>
-<!-- Videos -->
-<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 gx-4 gy-4"
-     id="youtube-video-grid" aria-live="polite"></div>
+
+
                 </div>
 
             </section>
@@ -647,3 +659,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     </body>
     </html>
+
+
+
+
+
