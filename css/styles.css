@@ -343,3 +343,18 @@ footer {
 .caption.disable-pointer-events {
   pointer-events: none;
 }
+/* Fix for reel video scaling */
+.mediaBox {
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0 15px; /* Add some breathing room on mobile */
+  box-sizing: border-box;
+}
+
+#reelVideo {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
