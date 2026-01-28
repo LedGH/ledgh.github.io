@@ -181,66 +181,32 @@ footer {
   position: relative;
 }
 
-.portfolio-item {
-  margin-bottom: 20px;
-}
-
-.portfolio-item a {
-  display: block;
-  position: relative;
-}
-
-.colmedia {
-  display: block;
-  width: 100%;
-  border: 5px solid #000000;
-  transition: box-shadow 0.3s;
-  box-sizing: border-box;
-  height: auto;
-  margin-bottom: -5px;
-}
-
-.portfolio-item:hover .colmedia {
-  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.75);
-}
-
 .caption {
   position: absolute;
-  top: 5px;
-  left: 5px;
-  right: 5px;
-  bottom: 5px;
-  background-color: rgba(0, 0, 0, 0.85);
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.7);
   color: white;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
   padding: 20px;
   opacity: 0;
   transition: opacity 0.3s ease;
-  pointer-events: none;
+  text-align: center;
 }
 
 .caption h3 {
   margin: 0 0 10px 0;
-  font-size: 1.5rem;
+  font-size: 1.2rem;
 }
 
 .caption p {
   margin: 0;
-  font-size: 1rem;
+  font-size: 0.9rem;
 }
 
 .portfolio-item:hover .caption {
-  opacity: 1;
+  opacity: 1; /* Show caption on hover */
 }
-
-body.dark-mode .portfolio-item:hover .colmedia {
-  box-shadow: 0 0 10px 0 rgba(255, 255, 255, 0.75);
-}
-
 
 .colmedia:hover {
   /* border-color: #ce2029; */
