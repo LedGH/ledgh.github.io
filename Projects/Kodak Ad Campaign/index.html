@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="shortcut icon" type="image/x-icon" href="../fav/favicon.ico">
+    <title>Highway Billboard - Luke El Dib</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="../css/styles.css">
+    <style>
+        a:link { color: #ce2029; }
+        a:visited { color: #ce2029; }
+        a:hover { color: #ce2029; }
+        a:active { color: #ce2029; }
+        
+        #project-hero {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+        }
+        
+        .project-title {
+            font-size: 70px;
+            color: #000000;
+            font-weight: bolder;
+        }
+        
+        .project-subtitle {
+            font-size: 20px;
+            color: #fe5000;
+            margin-top: 10px;
+            font-style: italic;
+        }
+        
+        body.dark-mode .project-title {
+            color: #f0f0f0;
+        }
+        
+        .back-link {
+            position: fixed;
+            top: 40px;
+            right: 30px;
+            z-index: 999;
+            background-color: #ce2029;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            color: black;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        
+        .back-link:hover {
+            background-color: #ece81a;
+            color: black;
+        }
+        
+        body.dark-mode .back-link {
+            background-color: #ce2029;
+            color: black;
+        }
+        
+        body.dark-mode .back-link:hover {
+            background-color: #ece81a;
+            color: black;
+        }
+        
+        .project-section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 30px;
+        }
+        
+        .section-title {
+            font-size: 60px;
+            text-align: center;
+            margin-bottom: 50px;
+            color: #000000;
+            font-weight: bolder;
+            text-decoration: underline;
+            text-decoration-color: #fe5000;
+            text-underline-offset: 20px;
+        }
+        
+        body.dark-mode .section-title {
+            color: #f0f0f0;
+        }
+        
+        .project-content {
+            font-size: 18px;
+            line-height: 1.8;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .project-image {
+            width: 100%;
+            border: 5px solid #000000;
+            margin: 30px 0;
+        }
+        
+        body.dark-mode .project-image {
+            border-color: #ffffff;
+        }
+        
+        .image-caption {
+            text-align: center;
+            font-style: italic;
+            color: #666;
+            margin-top: -20px;
+            margin-bottom: 30px;
+        }
+        
+        body.dark-mode .image-caption {
+            color: #999;
+        }
+        
+        .project-specs {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-left: 4px solid #fe5000;
+            margin: 30px 0;
+        }
+        
+        body.dark-mode .project-specs {
+            background-color: #2d2d2d;
+            color: #f0f0f0;
+        }
+        
+        .project-specs h3 {
+            color: #ce2029;
+            margin-top: 0;
+        }
+        
+        body.dark-mode .project-specs h3 {
+            color: #fc8f32;
+        }
+    </style>
+</head>
+
+<body>
+    <label class="switch">
+        <input type="checkbox" id="dark-mode-toggle">
+        <span class="slider round"></span>
+    </label>
+    
+    <a href="../index.html#work" class="back-link">← Back to Portfolio</a>
+    
+    <main>
+        <!-- Hero Section -->
+        <div id="project-hero">
+            <div>
+                <h1 class="project-title">HIGHWAY BILLBOARD</h1>
+                <h6 class="project-subtitle">Kodak Advertisement Campaign</h6>
+            </div>
+        </div>
+        
+        <hr style="margin-top: 0px; margin-bottom: 0px;" id="overview">
+        
+        <!-- Overview Section -->
+        <section class="project-section">
+            <h1 class="section-title">Overview</h1>
+            <div class="project-content">
+                <p>
+                    This highway billboard design is part of a larger Kodak advertising campaign 
+                    that reimagines how the iconic photography brand could engage with modern audiences. 
+                    The design plays with Kodak's classic yellow branding while incorporating 
+                    contemporary design sensibilities.
+                </p>
+                
+                <img src="../portfolio/Artboard 1-2.png" alt="Highway Billboard" class="project-image">
+                
+                <div class="project-specs">
+                    <h3>Project Details</h3>
+                    <p><strong>Client:</strong> Academic Project (Kodak Concept)</p>
+                    <p><strong>Medium:</strong> Digital Billboard Design</p>
+                    <p><strong>Tools:</strong> Adobe Illustrator, Photoshop</p>
+                    <p><strong>Year:</strong> 2024</p>
+                </div>
+            </div>
+        </section>
+        
+        <hr style="margin-top: 80px; margin-bottom: 80px;" id="concept">
+        
+        <!-- Concept Section -->
+        <section class="project-section">
+            <h1 class="section-title">Concept</h1>
+            <div class="project-content">
+                <p>
+                    The billboard leverages high-traffic visibility to create an instant visual impact. 
+                    By using bold typography and Kodak's signature color palette, the design captures 
+                    attention while maintaining brand recognition. The composition is deliberately 
+                    simple to ensure readability at highway speeds.
+                </p>
+                
+                <p>
+                    This piece is part of a multi-format advertising campaign that includes subway 
+                    takeovers, bus stop ads, and rolling billboard displays. Each format was designed 
+                    to work cohesively while adapting to its specific viewing context.
+                </p>
+            </div>
+        </section>
+        
+        <hr style="margin-top: 80px; margin-bottom: 80px;" id="campaign">
+        
+        <!-- Campaign Section -->
+        <section class="project-section">
+            <h1 class="section-title">Campaign</h1>
+            <div class="project-content">
+                <p>
+                    The full campaign explores various touchpoints where Kodak can connect with 
+                    audiences in urban environments. Each piece maintains visual consistency while 
+                    adapting to different formats and viewing distances.
+                </p>
+                
+                <img src="../portfolio/Artboard 2.png" alt="Subway Takeover" class="project-image">
+                <p class="image-caption">Companion subway takeover design from the same campaign</p>
+                
+                <img src="../portfolio/Artboard 3.png" alt="Rolling Ad 1" class="project-image">
+                <p class="image-caption">Rolling bus-stop advertisement (side 1)</p>
+                
+                <img src="../portfolio/Artboard 4.png" alt="Rolling Ad 2" class="project-image">
+                <p class="image-caption">Rolling bus-stop advertisement (side 2)</p>
+            </div>
+        </section>
+        
+        <hr style="margin-top: 80px; margin-bottom: 80px;" id="outcome">
+        
+        <!-- Outcome Section -->
+        <section class="project-section">
+            <h1 class="section-title">Outcome</h1>
+            <div class="project-content">
+                <p>
+                    The campaign demonstrates how traditional photography brands can maintain 
+                    relevance in digital spaces through strategic design and placement. The project 
+                    received positive feedback for its bold use of color and effective integration 
+                    of Kodak's visual identity.
+                </p>
+                
+                <p>
+                    By creating a cohesive visual language across multiple formats, the campaign 
+                    shows how consistent branding can work at various scales and in different 
+                    urban contexts.
+                </p>
+            </div>
+        </section>
+        
+        <div style="height: 100px;"></div>
+    </main>
+    
+    <!-- Bottom Navigation -->
+    <nav>
+        <ul>
+            <li><a href="#project-hero">Billboard</a></li>
+            <li><a href="#overview">Overview</a></li>
+            <li><a href="#concept">Concept</a></li>
+            <li><a href="#campaign">Campaign</a></li>
+            <li><a href="#outcome">Outcome</a></li>
+        </ul>
+    </nav>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const darkModeToggle = document.getElementById('dark-mode-toggle');
+            const darkModePreference = localStorage.getItem('darkMode');
+            if (darkModePreference === 'enabled') {
+                document.body.classList.add('dark-mode');
+                darkModeToggle.checked = true;
+            }
+            darkModeToggle.addEventListener('change', function() {
+                if (this.checked) {
+                    document.body.classList.add('dark-mode');
+                    localStorage.setItem('darkMode', 'enabled');
+                } else {
+                    document.body.classList.remove('dark-mode');
+                    localStorage.setItem('darkMode', 'disabled');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
