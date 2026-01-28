@@ -728,4 +728,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     const allLists = await Promise.all(
       channelIds.map(id => cachedFetchChannelVideos(id, MAX_PER_CHANNEL))
     );
-    allLists.forEach(list => list.forEach(v => grid.appendChild(rende
+    allLists.forEach(list => list.forEach(v => grid.appendChild(renderVideoCard(v))));
+  } catch (err) {
+    console.error('YouTube fetch error:', err);
+  }
+});
+</script>
+
+</body>
+</html>
