@@ -466,3 +466,16 @@ body.dark-mode .instagram-item img {
 body.dark-mode .instagram-item:hover img {
     box-shadow: 0 0 10px 0 rgba(255, 255, 255, 0.75);
 }
+
+.portfolio-item a {
+  display: block;
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+}
+
+.portfolio-item a img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
