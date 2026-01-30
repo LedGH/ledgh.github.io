@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="shortcut icon" type="image/x-icon" href="../../fav/favicon.ico">
+    <title>Amour Plastique - Luke El Dib</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="../../css/styles.css">
+    <style>
+        #project-hero {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            padding: 0 20px;
+            margin: 0;
+        }
+        
+        .video-container {
+            width: 100%;
+            max-width: 100%;
+            aspect-ratio: 16 / 9;
+            position: relative;
+            z-index: 1001; /* Higher than dark mode toggle (z-index: 1000) */
+        }
+        
+        .video-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        .project-title {
+            font-size: 70px;
+            color: #000000;
+            font-weight: bolder;
+        }
+        
+        .project-subtitle {
+            font-size: 20px;
+            color: #fe5000;
+            margin-top: 10px;
+            font-style: italic;
+        }
+        
+        body.dark-mode .project-title {
+            color: #f0f0f0;
+        }
+        
+        body.dark-mode .project-subtitle {
+            color: #fe5000;
+        }
+        
+        .back-link {
+            position: fixed;
+            top: 40px;
+            right: 30px;
+            z-index: 999;
+            background-color: #ce2029;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            color: #ffffff;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        
+        .back-link:hover {
+            background-color: #ece81a;
+            color: #000000;
+        }
+        
+        body.dark-mode .back-link {
+            background-color: #ce2029;
+            color: #ffffff;
+        }
+        
+        body.dark-mode .back-link:hover {
+            background-color: #ece81a;
+            color: #000000;
+        }
+        
+        .project-section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 30px;
+        }
+        
+        .section-title {
+            font-size: 60px;
+            text-align: center;
+            margin-bottom: 50px;
+            color: #000000;
+            font-weight: bolder;
+            text-decoration: underline;
+            text-decoration-color: #fe5000;
+            text-underline-offset: 20px;
+        }
+        
+        body.dark-mode .section-title {
+            color: #f0f0f0;
+        }
+        
+        .project-content {
+            font-size: 18px;
+            line-height: 1.8;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        body.dark-mode .project-content {
+            color: #ffffff;
+        }
+        
+        .project-image {
+            width: 100%;
+            border: 5px solid #000000;
+            margin: 30px 0;
+        }
+        
+        body.dark-mode .project-image {
+            border-color: #000000;
+        }
+        
+        .image-caption {
+            text-align: center;
+            font-style: italic;
+            color: #666;
+            margin-top: -20px;
+            margin-bottom: 30px;
+        }
+        
+        body.dark-mode .image-caption {
+            color: #999;
+        }
+        
+        .project-specs {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-left: 4px solid #ce2029;
+            margin: 30px 0;
+        }
+        
+        body.dark-mode .project-specs {
+            background-color: #2d2d2d;
+            color: #f0f0f0;
+        }
+        
+        .project-specs h3 {
+            color: #ce2029;
+            margin-top: 0;
+        }
+        
+        body.dark-mode .project-specs h3 {
+            color: #fc8f32;
+        }
+    </style>
+</head>
+
+<body>
+    <label class="switch">
+        <input type="checkbox" id="dark-mode-toggle">
+        <span class="slider round"></span>
+    </label>
+    
+    <main>
+        <!-- Hero Section with Video -->
+        <div id="project-hero">
+            <div class="video-container">
+                <iframe 
+                    src="https://youtube.com/embed/q6lZcvAcOWA?rel=0&modestbranding=1"
+                    title="Amour Plastique"
+                    frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowfullscreen>
+                </iframe>
+            </div>
+        </div>
+        
+        <hr style="margin-top: 0px; margin-bottom: 0px;" id="overview">
+        
+        <!-- Overview Section -->
+        <section class="project-section">
+            <h1 class="section-title">Overview</h1>
+            <div class="project-content">
+                <p>
+                    [Add your project description here]
+                </p>
+                
+                <div class="project-specs">
+                    <h3>Project Details</h3>
+                    <br>
+                    <p><strong>Type:</strong> Short Film / Video Project</p>
+                    <p><strong>Medium:</strong> Film/Video</p>
+                    <p><strong>Tools:</strong> [Your tools here]</p>
+                    <p><strong>Year:</strong> 2024</p>
+                </div>
+            </div>
+        </section>
+        
+        <hr style="margin-top: 80px; margin-bottom: 80px;" id="concept">
+        
+        <!-- Concept Section -->
+        <section class="project-section">
+            <h1 class="section-title">Concept</h1>
+            <div class="project-content">
+                <p>
+                    [Add your concept description here]
+                </p>
+            </div>
+        </section>
+        
+        <div style="height: 100px;"></div>
+    </main>
+    
+    <!-- Bottom Navigation -->
+    <nav>
+        <ul>
+            <li><a href="#project-hero">Video</a></li>
+            <li><a href="#overview">Overview</a></li>
+            <li><a href="#concept">Concept</a></li>
+        </ul>
+    </nav>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const darkModeToggle = document.getElementById('dark-mode-toggle');
+            const darkModePreference = localStorage.getItem('darkMode');
+            if (darkModePreference === 'enabled') {
+                document.body.classList.add('dark-mode');
+                darkModeToggle.checked = true;
+            }
+            darkModeToggle.addEventListener('change', function() {
+                if (this.checked) {
+                    document.body.classList.add('dark-mode');
+                    localStorage.setItem('darkMode', 'enabled');
+                } else {
+                    document.body.classList.remove('dark-mode');
+                    localStorage.setItem('darkMode', 'disabled');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
