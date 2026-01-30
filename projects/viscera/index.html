@@ -14,13 +14,14 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            padding: 0;
+            padding: 0 20px;
             margin: 0;
         }
         
         .video-container {
             width: 100%;
-            height: calc(100vh - 80px); /* Subtract navbar height */
+            max-width: 100%;
+            aspect-ratio: 16 / 9;
             position: relative;
         }
         
@@ -160,10 +161,9 @@
 <body>
     <main>
         <!-- Hero Section with Video -->
-        <div>
+        <div id="project-hero">
             <div class="video-container">
-                <iframe
-                    id="project-hero" 
+                <iframe 
                     src="https://www.youtube.com/embed/37tFqcd4S9c?rel=0&modestbranding=1"
                     title="Viscera"
                     frameborder="0"
