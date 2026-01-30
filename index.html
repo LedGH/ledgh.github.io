@@ -623,17 +623,15 @@ const MAX_PER_CHANNEL = 6;
 
 function renderVideoCard({ videoId, title, channelTitle }) {
   const col = document.createElement('div');
-  col.className = 'col video-item';
+  col.className = 'col-sm-4 portfolio-item';
   col.innerHTML = `
-    <div class="ratio ratio-16x9" style="overflow:hidden;">
-      <iframe
-        src="https://www.youtube-nocookie.com/embed/${videoId}?rel=0&modestbranding=1"
-        title="${title.replace(/"/g, '&quot;')}"
-        frameborder="0"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-        allowfullscreen
-      ></iframe>
-    </div>
+    <a href="projects/${videoId}/index.html">
+      <img src="https://img.youtube.com/vi/${videoId}/maxresdefault.jpg" class="colmedia" alt="${title.replace(/"/g, '&quot;')}">
+      <div class="caption">
+        <h3>${title}</h3>
+        <p>${channelTitle}</p>
+      </div>
+    </a>
   `;
   return col;
 }
