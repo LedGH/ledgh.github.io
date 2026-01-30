@@ -621,15 +621,26 @@ const channelIds = [
 
 const MAX_PER_CHANNEL = 6;
 
+// Function to convert title to URL-friendly slug
+function titleToSlug(title) {
+  return title
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')  // Replace non-alphanumeric with hyphens
+    .replace(/^-+|-+$/g, '');      // Remove leading/trailing hyphens
+}
+
 function renderVideoCard({ videoId, title, channelTitle }) {
   const col = document.createElement('div');
   col.className = 'col-sm-4 portfolio-item';
+  
+  const slug = titleToSlug(title);
+  
   col.innerHTML = `
-    <a href="projects/${videoId}/index.html">
+    <a href="projects/${slug}/index.html">
       <img src="https://img.youtube.com/vi/${videoId}/maxresdefault.jpg" class="colmedia" alt="${title.replace(/"/g, '&quot;')}">
       <div class="caption">
         <h3>${title}</h3>
-        <p>${channelTitle}</p>
+        <p>Video Project</p>
       </div>
     </a>
   `;
