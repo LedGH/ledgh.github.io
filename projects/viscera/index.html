@@ -23,6 +23,7 @@
             max-width: 100%;
             aspect-ratio: 16 / 9;
             position: relative;
+            z-index: 1001; /* Higher than dark mode toggle (z-index: 1000) */
         }
         
         .video-container iframe {
@@ -159,6 +160,11 @@
 </head>
 
 <body>
+    <label class="switch">
+        <input type="checkbox" id="dark-mode-toggle">
+        <span class="slider round"></span>
+    </label>
+    
     <main>
         <!-- Hero Section with Video -->
         <div id="project-hero">
@@ -220,11 +226,21 @@
     
     <script>
         document.addEventListener('DOMContentLoaded', (event) => {
-            // Check dark mode preference from localStorage and apply it
+            const darkModeToggle = document.getElementById('dark-mode-toggle');
             const darkModePreference = localStorage.getItem('darkMode');
             if (darkModePreference === 'enabled') {
                 document.body.classList.add('dark-mode');
+                darkModeToggle.checked = true;
             }
+            darkModeToggle.addEventListener('change', function() {
+                if (this.checked) {
+                    document.body.classList.add('dark-mode');
+                    localStorage.setItem('darkMode', 'enabled');
+                } else {
+                    document.body.classList.remove('dark-mode');
+                    localStorage.setItem('darkMode', 'disabled');
+                }
+            });
         });
     </script>
 </body>
