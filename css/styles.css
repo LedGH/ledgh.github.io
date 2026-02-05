@@ -532,13 +532,13 @@ body.dark-mode label {
   color: #f0f0f0;
 }
 
-/* Textarea specific */
+
 textarea {
   resize: vertical;
   min-height: 150px;
 }
 
-/* Remove that weird red bottom border */
+
 input[type=text] {
   border-bottom: 2px solid #333 !important;
 }
@@ -547,35 +547,7 @@ body.dark-mode input[type=text] {
   border-bottom: 2px solid #666 !important;
 }
 
-/* Submit button enhancement */
-.button {
-  background-color: #ce2029;
-  color: white;
-  border: none;
-  padding: 15px 40px;
-  font-size: 18px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: all 0.3s;
-  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
-}
 
-.button:hover {
-  background-color: #ece81a;
-  color: #000;
-  transform: translateY(-2px);
-}
-
-body.dark-mode .button {
-  background-color: #ce2029;
-  color: white;
-}
-
-body.dark-mode .button:hover {
-  background-color: #fc8f32;
-  color: #000;
-}
-/* Select dropdown styling */
 select {
   background-color: #000000;
   color: #ffffff;
@@ -586,7 +558,7 @@ select option {
   color: #ffffff;
 }
 
-/* Dark mode - keep it the same */
+
 body.dark-mode select {
   background-color: #000000;
   color: #ffffff;
