@@ -184,7 +184,10 @@
         <section class="project-section">
             <h1 class="section-title">Overview</h1>
             <div class="project-content">
-                <img src="media/preview1.png" class="project-image" alt="Accompanying poster"></img>
+                <div style="position: relative; display: inline-block; width: 100%;" onmouseover="this.children[1].style.opacity='1'" onmouseout="this.children[1].style.opacity='0'">
+    <img src="media/preview2.png" class="project-image" alt="Accompanying poster">
+    <img src="media/preview1.png" class="project-image" style="position: absolute; top: 0; left: 0; opacity: 0; transition: opacity 0.5s;" alt="Hover image">
+</div>
                 <p>
                     This is an experimental title sequence inspired by Saul Bass' approach tomovement and motion graphics for a fictional show.
                 </p>
