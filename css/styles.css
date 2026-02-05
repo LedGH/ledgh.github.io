@@ -475,3 +475,124 @@ body.dark-mode .instagram-item:hover img {
     box-shadow: 0 0 10px 0 rgba(255, 255, 255, 0.75);
 }
 
+/* Improved Contact Form Styling */
+
+/* Input fields */
+input[type=text],
+input[type=email],
+select,
+textarea {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #333;
+  background-color: transparent;
+  color: inherit;
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+  font-size: 16px;
+  border-radius: 0; /* Remove default rounded corners */
+  transition: border-color 0.3s, background-color 0.3s;
+}
+
+input[type=text]:focus,
+input[type=email]:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: #ce2029;
+  background-color: rgba(206, 32, 41, 0.05);
+}
+
+/* Dark mode input styling */
+body.dark-mode input[type=text],
+body.dark-mode input[type=email],
+body.dark-mode select,
+body.dark-mode textarea {
+  border-color: #666;
+  background-color: #2d2d2d;
+  color: #f0f0f0;
+}
+
+body.dark-mode input[type=text]:focus,
+body.dark-mode input[type=email]:focus,
+body.dark-mode select:focus,
+body.dark-mode textarea:focus {
+  border-color: #fc8f32;
+  background-color: rgba(252, 143, 50, 0.1);
+}
+
+/* Labels */
+label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+  color: #000;
+}
+
+body.dark-mode label {
+  color: #f0f0f0;
+}
+
+/* Textarea specific */
+textarea {
+  resize: vertical;
+  min-height: 150px;
+}
+
+/* Remove that weird red bottom border */
+input[type=text] {
+  border-bottom: 2px solid #333 !important;
+}
+
+body.dark-mode input[type=text] {
+  border-bottom: 2px solid #666 !important;
+}
+
+/* Submit button enhancement */
+.button {
+  background-color: #ce2029;
+  color: white;
+  border: none;
+  padding: 15px 40px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+
+.button:hover {
+  background-color: #ece81a;
+  color: #000;
+  transform: translateY(-2px);
+}
+
+body.dark-mode .button {
+  background-color: #ce2029;
+  color: white;
+}
+
+body.dark-mode .button:hover {
+  background-color: #fc8f32;
+  color: #000;
+}
+/* Select dropdown styling */
+select {
+  background-color: #000000;
+  color: #ffffff;
+}
+
+select option {
+  background-color: #000000;
+  color: #ffffff;
+}
+
+/* Dark mode - keep it the same */
+body.dark-mode select {
+  background-color: #000000;
+  color: #ffffff;
+}
+
+body.dark-mode select option {
+  background-color: #000000;
+  color: #ffffff;
+}
