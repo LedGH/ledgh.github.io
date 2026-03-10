@@ -163,7 +163,14 @@ document.addEventListener('DOMContentLoaded', function () {
         var td = tz.isHr ? Math.abs(p.y - tz.cy) : Math.sqrt((p.x - tz.cx) * (p.x - tz.cx) + (p.y - tz.cy) * (p.y - tz.cy));
         if (td < tz.radius) textFade = Math.min(textFade, td / tz.radius);
       }
-      var restFade = textFade * textFade;
+var hrFade = 0;
+for (var t = 0; t < textZones.length; t++) {
+  var tz = textZones[t];
+  if (!tz.isHr) continue;
+  var td = Math.abs(p.y - tz.cy);
+  if (td < tz.radius) hrFade = Math.max(hrFade, 1 - td / tz.radius);
+}
+var restFade = textFade * textFade;
 
       var distMouse = Math.sqrt(mdSq);
       var cursorI   = distMouse < 40 ? 1 - distMouse / 40 : 0;
@@ -208,7 +215,13 @@ document.addEventListener('DOMContentLoaded', function () {
         fb = Math.round(bB + (hB - bB) * combinedI);
         opacity = (baseO + (1 - baseO) * combinedI) * restFade;
       } else { fr = bR; fg = bG; fb = bB; opacity = baseO * restFade; }
-
+if (hrFade > 0) {
+  var inv = isDark ? 255 : 0;
+  fr = Math.round(fr + (inv - fr) * hrFade);
+  fg = Math.round(fg + (inv - fg) * hrFade);
+  fb = Math.round(fb + (inv - fb) * hrFade);
+  opacity = Math.max(opacity, hrFade);
+}
       if (opacity < 0.01) continue;
       drawCalls.push({ charIdx: charIdx, x: p.x, sy: sy, style: 'rgba('+fr+','+fg+','+fb+','+opacity.toFixed(2)+')' });
     }
