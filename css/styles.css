@@ -583,3 +583,8 @@ body.dark-mode select option {
   z-index: -1;
   pointer-events: none;
 }
+hr {
+  border: none;
+  height: 20px;
+  margin: 0;
+}

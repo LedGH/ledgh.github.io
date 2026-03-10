@@ -19,14 +19,16 @@ document.addEventListener('DOMContentLoaded', function () {
   function refreshTextZones() {
     textZones = [];
     var scrollTop = window.scrollY;
-    document.querySelectorAll('p, h1, h2, h3, h4, h5, h6, li, span').forEach(function (el) {
+    document.querySelectorAll('p, h1, h2, h3, h4, h5, h6, li, span, hr').forEach(function (el) {
       if (el.closest('a, button, nav, .btn-demo, .card-demo')) return;
       var r = el.getBoundingClientRect();
-      if (r.width < 5 || r.height < 5) return;
+      if (r.width < 5) return;
+      var isHr = el.tagName === 'HR';
       textZones.push({
         cx: r.left + r.width / 2,
         cy: r.top + r.height / 2 + scrollTop,
-        radius: Math.max(r.width, r.height) / 1.5
+        radius: isHr ? SPACING * 1.8 : Math.max(r.width, r.height) / 1.5,
+        isHr: isHr
       });
     });
     textZoneDirty = false;
@@ -46,6 +48,7 @@ document.addEventListener('DOMContentLoaded', function () {
     ctx.textAlign    = 'center';
     ctx.textBaseline = 'middle';
     points = [];
+    var SPACING = Math.max(26, Math.ceil(W / 60));
     var pageH = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight, H * 2);
     for (var y = 0; y <= pageH; y += SPACING) {
       for (var x = 0; x <= W; x += SPACING) {
@@ -157,7 +160,7 @@ document.addEventListener('DOMContentLoaded', function () {
       var textFade = 1;
       for (var t = 0; t < textZones.length; t++) {
         var tz = textZones[t];
-        var td = Math.sqrt((p.x - tz.cx) * (p.x - tz.cx) + (p.y - tz.cy) * (p.y - tz.cy));
+        var td = tz.isHr ? Math.abs(p.y - tz.cy) : Math.sqrt((p.x - tz.cx) * (p.x - tz.cx) + (p.y - tz.cy) * (p.y - tz.cy));
         if (td < tz.radius) textFade = Math.min(textFade, td / tz.radius);
       }
       var restFade = textFade * textFade;
