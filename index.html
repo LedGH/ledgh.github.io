@@ -404,27 +404,44 @@
             });
           });
         </script> -->
-        <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-        document.addEventListener('DOMContentLoaded', (event) => {
-        const darkModeToggle = document.getElementById('dark-mode-toggle');
-    
-    // Load dark mode from localStorage - this is how I can keep the button state saved between sessions (no more flashbangs)
-    const darkModePreference = localStorage.getItem('darkMode');
-    if (darkModePreference === 'enabled') {
-      document.body.classList.add('dark-mode');
-      darkModeToggle.checked = true;
-    }
+        <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+<script>document.addEventListener('DOMContentLoaded', function() {
+  var darkModeToggle = document.getElementById('dark-mode-toggle');
+  var overlay = document.createElement('div');
+  overlay.id = 'mode-overlay';
+  document.body.appendChild(overlay);
 
-    darkModeToggle.addEventListener('change', function() {
-      if (this.checked) {
-        document.body.classList.add('dark-mode');
-        localStorage.setItem('darkMode', 'enabled');
-      } else {
-        document.body.classList.remove('dark-mode');
-        localStorage.setItem('darkMode', 'disabled');
-      }
+  var darkModePreference = localStorage.getItem('darkMode');
+  if (darkModePreference === 'enabled') {
+    document.body.classList.add('dark-mode');
+    darkModeToggle.checked = true;
+  }
+
+  darkModeToggle.addEventListener('change', function() {
+    var goingDark = this.checked;
+
+    overlay.style.transition = 'none';
+    overlay.style.backgroundColor = goingDark ? '#1d1d1b' : '#ffffff';
+    overlay.style.clipPath = 'circle(0px at 60px 57px)';
+
+    requestAnimationFrame(function() {
+      requestAnimationFrame(function() {
+        overlay.style.transition = 'clip-path 0.2s ease-in';
+        overlay.style.clipPath = 'circle(200vmax at 60px 57px)';
+
+        setTimeout(function() {
+          if (goingDark) {
+            document.body.classList.add('dark-mode');
+            localStorage.setItem('darkMode', 'enabled');
+          } else {
+            document.body.classList.remove('dark-mode');
+            localStorage.setItem('darkMode', 'disabled');
+          }
+        }, 100);
+      });
     });
   });
+});
         
 </script>
 <!-- lol nvm more flashbangs -->
