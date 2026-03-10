@@ -130,8 +130,8 @@ document.addEventListener('DOMContentLoaded', function () {
     if (textZoneDirty) refreshTextZones();
 
     var hR = 255, hG = isDark ? 20 : 90, hB = 0;
-    var bR = 160, bG = 160, bB = 160;
-    var baseO = isDark ? 0.22 : 0.30;
+    var bR = isDark ? 160 : 10, bG = isDark ? 160 : 10, bB = isDark ? 160 : 10;
+    var baseO = isDark ? 0.40 : 0.60;
     var drawCalls = [];
 
     for (var i = 0; i < points.length; i++) {
