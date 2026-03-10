@@ -130,6 +130,9 @@ section {
 }
 
 /* Navbar */
+nav a:link, nav a:visited {
+  color: #ffffff;
+}
 nav {
   position: fixed;
   bottom: 0;
